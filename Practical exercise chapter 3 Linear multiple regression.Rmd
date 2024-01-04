@@ -1,0 +1,105 @@
+---
+title: "Practical exercise chapter 3 Linear multiple regression"
+author: "Dr.BENGHALEM Abdelhadi"
+output: 
+  html_notebook: 
+    toc: yes
+    fig_caption: yes
+editor_options: 
+  markdown: 
+    wrap: sentence
+---
+
+# Practical Exercise 2
+
+Consider the model with three explanatory variables: `𝒚_𝑡 = 𝜷_𝟎 + 𝜷_𝟏 𝑿_𝟏𝒕 + 𝜷_𝟐 𝑿_𝟐𝒕+ 𝜷_𝟑 𝑿_𝟑𝒕+𝐮_𝒕`
+
+We have the data from Table 1.
+Put the model in matrix form, specifying the dimensions of each of the matrices.
+Estimate the parameters of the model.
+Calculate the estimate of the error variance as well as the standard deviations of each of the coefficients.
+Calculate the R-squared and the adjusted R-squared.
+
+### **Step 1: Data Preparation**
+
+```{r}
+# Data from Table 1
+data <- data.frame(
+  t = 1:14,
+  y = c(12, 14, 10, 16, 14, 19, 21, 19, 21, 16, 19, 21, 25, 21),
+  X_1 = c(2, 1, 3, 6, 7, 8, 8, 5, 5, 8, 4, 9, 12, 7),
+  X_2 = c(45, 43, 43, 47, 42, 41, 32, 33, 41, 38, 32, 31, 35, 29),
+  X_3 = c(121, 132, 154, 145, 129, 156, 132, 147, 128, 163, 161, 172, 174, 180)
+)
+data
+```
+
+### The process to calculate the coefficients using matrices
+
+```{r}
+# Define the matrices
+X <- cbind(rep(1, nrow(data)), data$X_1, data$X_2, data$X_3)  # Design matrix X
+Y <- data$y  # Dependent variable Y
+
+# Calculate X'X
+XtX <- t(X) %*% X
+
+# Calculate (X'X)^-1
+XtX_inverse <- solve(XtX)
+
+# Calculate X'Y
+XtY <- t(X) %*% Y
+
+# Calculate (X'X)^-1 * X'Y
+coefficients <- XtX_inverse %*% XtY
+
+# Display matrices
+print("X'X:")
+print(XtX)
+
+print("(X'X)^-1:")
+print(XtX_inverse)
+
+print("X'Y:")
+print(XtY)
+
+print("Coefficients:")
+print(coefficients)
+```
+
+### Calculating estimated y, residuals, and squared residuals & Displaying the updated data
+
+```{r}
+# Calculating estimated y, residuals, and squared residuals
+data$y_hat <- fitted(model)
+data$u <- residuals(model)
+data$u_squared <- residuals(model)^2
+
+# Displaying the updated dataset
+print("Updated dataset with estimated y, residuals, and squared residuals:")
+print(data)
+```
+
+**`The calculations involved in this process are lengthy and tedious, underscoring the undeniable advantage of using a computer for such computations.`**
+
+### **Step 2: Model Estimation**
+
+```{r}
+# Fitting the regression model
+model <- lm(y ~ X_1 + X_2 + X_3, data = data)
+summary(model)
+```
+
+### An example of how you can use **`broom`** to get a tidy table for the regression summary:
+
+```{r}
+# Load the necessary library
+library(broom)
+
+# Fit the regression model
+model <- lm(y ~ X_1 + X_2 + X_3, data = data)
+
+# Get a tidy summary of the model
+tidy_summary <- tidy(model)
+print(tidy_summary)
+```
