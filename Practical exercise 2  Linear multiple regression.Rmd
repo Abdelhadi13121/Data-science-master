@@ -1,0 +1,282 @@
+---
+title: "Practical exercise 2  Linear multiple regression"
+author: "Dr.BENGHALEM Abdelhadi"
+output: 
+  html_notebook: 
+    toc: yes
+    fig_caption: yes
+editor_options: 
+  markdown: 
+    wrap: sentence
+---
+
+# Practical Exercise 2
+
+Consider the model with three explanatory variables: `𝒚_𝑡 = 𝜷_𝟎 + 𝜷_𝟏 𝑿_𝟏𝒕 + 𝜷_𝟐 𝑿_𝟐𝒕+ 𝜷_𝟑 𝑿_𝟑𝒕+𝐮_𝒕`
+
+We have the data from Table
+
+1.  1\.
+    Put the model in matrix form, specifying the dimensions of each of the matrices.
+
+2.  Estimate the parameters of the model.
+
+3.  Calculate the estimate of the error variance as well as the standard deviations of each of the coefficients.
+
+4.  Calculate the R-squared and the adjusted R-squared.
+
+### **Step 1: Data Preparation**
+
+```{r}
+# Data from Table 1
+data <- data.frame(
+  t = 1:14,
+  y = c(12, 14, 10, 16, 14, 19, 21, 19, 21, 16, 19, 21, 25, 21),
+  X_1 = c(2, 1, 3, 6, 7, 8, 8, 5, 5, 8, 4, 9, 12, 7),
+  X_2 = c(45, 43, 43, 47, 42, 41, 32, 33, 41, 38, 32, 31, 35, 29),
+  X_3 = c(121, 132, 154, 145, 129, 156, 132, 147, 128, 163, 161, 172, 174, 180)
+)
+data
+```
+
+### The process to calculate the coefficients using matrices
+
+```{r}
+# Define the matrices
+X <- cbind(rep(1, nrow(data)), data$X_1, data$X_2, data$X_3)  # Design matrix X
+Y <- data$y  # Dependent variable Y
+
+# Calculate X'X
+XtX <- t(X) %*% X
+
+# Calculate (X'X)^-1
+XtX_inverse <- solve(XtX)
+
+# Calculate X'Y
+XtY <- t(X) %*% Y
+
+# Calculate (X'X)^-1 * X'Y
+coefficients <- XtX_inverse %*% XtY
+
+# Display matrices
+print("X'X:")
+print(XtX)
+
+print("(X'X)^-1:")
+print(XtX_inverse)
+
+print("X'Y:")
+print(XtY)
+
+print("Coefficients:")
+print(coefficients)
+```
+
+### Calculating estimated y, residuals, and squared residuals & Displaying the updated data
+
+```{r}
+# Calculating estimated y, residuals, and squared residuals
+data$y_hat <- fitted(model)
+data$u <- residuals(model)
+data$u_squared <- residuals(model)^2
+
+# Displaying the updated dataset
+print("Updated dataset with estimated y, residuals, and squared residuals:")
+print(data)
+```
+
+**`The calculations involved in this process are lengthy and tedious, underscoring the undeniable advantage of using a computer for such computations.`**
+
+### **Step 2: Model Estimation**
+
+```{r}
+# Fitting the regression model
+model <- lm(y ~ X_1 + X_2 + X_3, data = data)
+summary(model)
+```
+
+### To add columns of leverage values (`hi`) and standardized residuals (`u_hat_s`) to your existing dataset, you can follow these steps:
+
+```{r}
+
+# Add columns of leverage values and standardized residuals to the dataset
+data$hi <- hatvalues(model)
+data$u_hat_s <- rstandard(model)
+
+# Display the updated dataset
+print("Updated dataset with leverage values and standardized residuals:")
+print(data)
+
+```
+
+### Excel Save
+
+```{r}
+# Install and load the writexl package if not already installed
+install.packages("writexl")
+
+```
+
+```{r}
+library(writexl)
+# Assuming 'data' is your dataset
+write_xlsx(data, "leverage values (hi) and standardized residuals (u_hat_s)")
+```
+
+### The levarage & standirized risiduals **Calculate Leverage:**
+
+-   Leverage values `(h_ii)` can be calculated using the formula: `hi​i=xi​(X′X)−1xi′`​, where `xi`​ is the row vector of predictors for observation i.
+
+-   In R, you can use the **`hatvalues()`** function to get leverage values.
+
+```{r}
+# Calculate leverage values
+leverage_values <- hatvalues(model)
+```
+
+**Calculate Standardized Residuals:**
+
+-   In R, you can use the **`rstandard()`** function to get standardized residuals.
+
+```{r}
+# Calculate standardized residuals
+standardized_residuals <- rstandard(model)
+```
+
+**Identify Outliers:**
+
+-   Values that have leverage values (h_ii) exceeding a certain threshold (commonly considered as 2p/n, where p is the number of predictors and n is the sample size) are often flagged as high leverage points.
+
+-   Standardized residuals beyond a threshold (commonly ±2.5 or ±3) may be considered as outliers.
+
+```{r}
+# Thresholds
+leverage_threshold <- 2 * length(coefficients(model))/length(data$y)
+residual_threshold <- 2.5  # or 3
+
+# Identify high leverage points
+high_leverage_points <- which(leverage_values > leverage_threshold)
+
+# Identify outliers based on standardized residuals
+outliers <- which(abs(standardized_residuals) > residual_threshold)
+
+```
+
+Print or Analyze Results:
+
+```{r}
+# Display results
+cat("High leverage points:", high_leverage_points, "\n")
+cat("Outliers:", outliers, "\n")
+
+```
+
+Cook's Distance
+
+```{r}
+#  'model' is the linear regression model
+cooks_dist <- cooks.distance(model)
+
+# Add Cook's distance to the data frame
+data$cooks_distance <- cooks_dist
+
+# Display the updated dataset
+print("Updated dataset with Cook's distance:")
+print(data)
+
+```
+
+```{r}
+write_xlsx(data, "output.xlsx")
+```
+
+### Detect high Cook's distance values in R
+
+you can identify observations with Cook's distance exceeding a certain threshold.
+A commonly used threshold is 4/n, where 'n' is the number of observations.
+If Cook's distance for an observation exceeds this threshold, it might be considered influential.
+
+```{r}
+# Assuming 'model' is your linear regression model
+cooks_dist <- cooks.distance(model)
+
+# Set the threshold
+threshold <- 4 / length(cooks_dist)
+
+# Identify observations with high Cook's distance
+high_cooks <- which(cooks_dist > threshold)
+
+# Display results
+if (length(high_cooks) > 0) {
+  cat("Observations with high Cook's distance:", high_cooks, "\n")
+} else {
+  cat("No observations with high Cook's distance.\n")
+}
+
+```
+
+### Visualization 
+
+```{r}
+# Create a boxplot
+library(ggplot2)
+
+# Create a ggplot boxplot
+ggplot(data, aes(y = u_squared)) +
+  geom_boxplot(fill = "lightblue", color = "blue") +
+  labs(title = "Boxplot of Squared Residuals",
+       y = "Squared Residuals") +
+  theme_minimal()
+
+
+```
+
+```{r}
+library(ggplot2)
+library(plotly)
+
+# Create a ggplot boxplot
+p <- ggplot(data, aes(y = u_squared)) +
+  geom_boxplot(fill = "lightblue", color = "blue", outlier.color = "red", outlier.shape = 16) +
+  labs(title = "Boxplot of Squared Residuals",
+       y = "Squared Residuals") +
+  theme_minimal()
+
+# Convert ggplot to plotly
+p <- ggplotly(p, tooltip = "all")
+
+# Show the interactive plot
+p
+
+```
+
+```{r}
+# Assuming data contains the dataframe with columns y, u_squared, etc.
+library(ggplot2)
+
+# Scatterplot of y vs. u_squared using ggplot2
+ggplot(data, aes(x = y, y = u_squared)) +
+  geom_point(color = "blue", size = 3, shape = 16) +
+  labs(title = "Scatterplot of y vs. Squared Residuals",
+       x = "y",
+       y = "Squared Residuals") +
+  theme_minimal()
+
+
+```
+
+```{r}
+# Assuming data contains the dataframe with columns y, u_squared, etc.
+library(plotly)
+
+# Scatterplot of y vs. u_squared with a fitted line
+scatter_plot <- plot_ly(data, x = ~y, y = ~u_squared, mode = "markers", type = "scatter", marker = list(color = "blue")) %>%
+  add_trace(y = ~fitted(lm(u_squared ~ y, data)), mode = "lines", type = "scatter", line = list(color = "red")) %>%
+  layout(title = "Scatterplot of y vs. Squared Residuals with Fitted Line",
+         xaxis = list(title = "y"),
+         yaxis = list(title = "Squared Residuals"))
+
+# Print the interactive scatter plot
+scatter_plot
+
+```
