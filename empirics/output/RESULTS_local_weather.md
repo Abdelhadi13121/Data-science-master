@@ -105,3 +105,36 @@ Not pre‑specified. δ is in % per 1 s.d. of W, with t in parentheses.
 
 ## Link to the original proposal
 The exporter‑heat instrument raised world cereal prices by 6–8% (aggregate F ≈ 8–12) but was too weak in the market panel. The paper therefore reports the global pass‑through only as conditional correlations (about 20% within 6–8 months) and an Anderson–Rubin bound at two months, [−0.39, 0.11]. See `RESULTS_main.md`.
+
+## 8. Selection, measurement and inference (exploratory, `10_selection_sensitivity.py`)
+
+All results below are δ at h = 6, in % per 1 s.d. of W, with t in parentheses.
+
+**Multiple testing across the 7 horizons:**
+- Holm‑adjusted p ≤ 0.009 at every horizon from h = 4 to h = 12, and Bonferroni‑adjusted p ≤ 0.02.
+- Only h = 2 loses significance (Holm p = 0.066).
+
+**Spatial correlation:**
+| Clustering | δ | t |
+|---|---|---|
+| Baseline: country × month | 0.99 | 3.63 |
+| 2° grid cell × month | 0.99 | 4.48 |
+| 5° grid cell × month | 0.99 | 3.76 |
+
+**Sample selection (WFP coverage is not random):**
+- **Series monitored before 2010:** δ = **1.66 (3.83)**, n = 240,582. The effect is larger in long‑monitored markets, so later coverage expansion dilutes it rather than creating it.
+- **Market‑entry test:** whether WFP starts monitoring a market is unrelated to adverse weather in the previous three months. The coefficient is −0.05 pp against a mean entry rate of 0.46 pp per month (t = −1.78), and if anything negative.
+
+**Construction of the weather index:**
+| Variant | δ | t |
+|---|---|---|
+| 1‑month window | 0.56 | 3.40 |
+| 2‑month window | 0.81 | 3.53 |
+| **3‑month window (baseline)** | **0.99** | **3.63** |
+| 6‑month window | 1.40 | 4.24 |
+| Clip at ±3 | 1.02 | 3.71 |
+| Clip at ±5 | 0.98 | 3.59 |
+| No clipping | 0.94 | 3.52 |
+| Market‑specific detrending | 0.96 | 3.63 |
+
+The effect rises steadily with the aggregation window, so prices respond to accumulated seasonal anomalies. The baseline is conservative. Clipping and detrending do not matter.
