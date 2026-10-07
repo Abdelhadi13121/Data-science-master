@@ -29,8 +29,12 @@ OUT = f"{ROOT}/output/tables"
 os.makedirs(OUT, exist_ok=True)
 
 
+ZCOL = os.environ.get("INSTRUMENT", "Z_heat")  # primary: extreme-heat index (see RESULTS_first_stage.md)
+
+
 def prepare(p, H):
     p = p.sort_values(["series", "date"]).copy()
+    p["Z"] = p[ZCOL]
     g = p.groupby("series")
     p["dG"] = p.groupby("series").lG.diff()
     p["dE"] = g.lfx.diff()
