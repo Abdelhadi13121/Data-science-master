@@ -1,0 +1,9 @@
+data/raw/era5_monthly/
+data/raw/gpcp/
+data/raw/wfp/
+data/processed/*.parquet
+__pycache__/
+*.log
+data/raw/faostat/
+data/raw/ucdp/
+data/raw/access/
