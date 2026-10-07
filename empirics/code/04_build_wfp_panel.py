@@ -94,8 +94,10 @@ def build_prices(df):
     return p
 
 
-def local_weather(markets, dates):
-    """Market-level monthly weather anomalies from ERA5 grids + GPCP."""
+def local_weather(markets, dates, window=3, clip=4.0, detrend=False):
+    """Market-level monthly weather anomalies from ERA5 grids + GPCP.
+    window: months aggregated (baseline 3); clip: |z| cap (None = no clipping);
+    detrend: remove a market-specific linear trend from W (sensitivity only)."""
     lat_idx = np.clip(np.round((90 - markets.latitude.values) / 0.25).astype(int), 0, 720)
     lon_idx = np.round((markets.longitude.values % 360) / 0.25).astype(int) % 1440
     rows = {}
@@ -123,14 +125,17 @@ def local_weather(markets, dates):
     out = []
     for k, m in w.items():
         m = m.sort_index()
-        m = m.rolling(3, min_periods=2).sum() if agg[k] == "sum" else m.rolling(3, min_periods=2).mean()
+        mp = max(1, window - 1)
+        m = m.rolling(window, min_periods=mp).sum() if agg[k] == "sum" else m.rolling(window, min_periods=mp).mean()
         base = m[(m.index.year >= 1991) & (m.index.year <= 2020)]
         mu = base.groupby(base.index.month).mean()
         sd = base.groupby(base.index.month).std()
         pos = sd.to_numpy()[sd.to_numpy() > 0]
         floor = np.nanquantile(pos, 0.10) if pos.size else 1.0
         sd = sd.where(sd > floor, floor)
-        z = ((m - mu.loc[m.index.month].values) / sd.loc[m.index.month].values).clip(-4, 4)
+        z = (m - mu.loc[m.index.month].values) / sd.loc[m.index.month].values
+        if clip is not None:
+            z = z.clip(-clip, clip)
         # markets with (near-)zero heat exposure in a season carry no heat signal
         if k == "hdd30":
             z = z.where(mu.loc[m.index.month].values > 1.0)
@@ -141,6 +146,15 @@ def local_weather(markets, dates):
     # where extreme heat is climatologically absent, use the mean-temperature anomaly
     W["z_heat"] = W.z_hdd30.fillna(W.z_tmean)
     raw = (W.z_heat.fillna(0) - W.z_swvl1.fillna(0) - W.z_precip.fillna(0)) / 3
+    if detrend:
+        tt = (W.date - W.date.min()).dt.days.to_numpy(float)
+        W["_t"] = tt
+        W["_r"] = raw
+        def _dt(g):
+            b = np.polyfit(g._t, g._r, 1) if g._r.notna().sum() > 24 else (0.0, g._r.mean())
+            return g._r - (b[0] * g._t + b[1])
+        raw = W.groupby("mkey", group_keys=False).apply(_dt)
+        W = W.drop(columns=["_t", "_r"])
     W["W"] = (raw - raw.mean()) / raw.std()
     return W[W.date.isin(dates)]
 
