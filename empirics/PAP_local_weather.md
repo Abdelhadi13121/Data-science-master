@@ -35,3 +35,24 @@ $$y_{i,t+h}-y_{i,t-1}=\delta_h W_{it}+\sum_{l=1}^{3}\left(\rho_{hl}\Delta y_{i,t
 ## Decision rules
 - All of the above are reported regardless of significance. No new moderators, samples or fixed‑effect structures are added without labelling them exploratory.
 - If the lead placebo is significant at 5%, the causal reading of δ_h is withdrawn.
+
+---
+## Addendum A (2026-10-07; committed before estimation; results labelled exploratory)
+
+Added after the main results, to address mechanism, policy moderators and welfare. The specifications are fixed here.
+
+**M1 – Mechanism (production).** FAOSTAT QCL, country × crop × year, 2000–2024. Crops: maize, rice, wheat, sorghum, millet, cassava, yams, plantains.
+- **Model:** ln(production) on the annual mean W across the country's WFP markets, with country × crop and crop × year fixed effects; standard errors clustered by country. A crop‑group interaction (traded rice/wheat vs. local staples) is also estimated.
+- **Prediction:** local weather lowers production for all crops, including rice and wheat. If so, the price contrast in RQ2 reflects tradability (import arbitrage) rather than an absence of supply shocks.
+
+**M2 – Policy moderators** (h = 6, main specification, two‑way clustering by country and month). All moderators are fixed before the sample period or measured with a lag:
+1. **Cereal import dependence:** imports / domestic supply for "Cereals – Excluding Beer", FAOSTAT Food Balance Sheets, averaged over 2010–2013 (the earliest years of the current FBS series). Standardized.
+2. **Conflict exposure:** log(1 + UCDP‑GED fatalities within 50 km of the market over the previous 12 months). Standardized; time‑varying and lagged.
+3. **Remoteness:** log distance to the nearest city with population ≥ 500,000 (Natural Earth). Standardized.
+
+Each moderator is interacted with W, first one at a time, then jointly.
+
+**M3 – Welfare exposure.**
+- For each country, the implied 6‑month price increase of the staple basket per 1 s.d. drought is Σ_k s_kc · δ_k.
+- s_kc is the share of staple calories from group k (FBS food supply, kcal/capita/day, 2010–2013 average). δ_k is the group‑specific effect at h = 6 from Table RQ2 (rice baseline plus interaction).
+- **Reported:** the distribution across countries and its correlation with the coarse‑grain/root share of the diet.
