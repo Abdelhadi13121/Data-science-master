@@ -11,7 +11,8 @@ Replication pipeline for the proposal in `../research-proposal/`. Run the script
 | 3 | `code/03_first_stage.py` | world prices + $Z$ | `output/tables/first_stage_lp.csv`, `output/figures/first_stage_lp.png` |
 | 4 | `code/04_build_wfp_panel.py` | **`data/raw/wfp/*.csv`** (HDX "Global – Food Prices" yearly CSVs) | `data/processed/panel.parquet` |
 | 5 | `code/05_estimate.py` | panel | `output/tables/main_panel.csv` (RF, OLS, 2SLS-LP, DML-PLIV, placebo) |
-| MC | `code/99_simulate_panel.py` | – | simulated panel with known parameters for validating step 5 |
+| MC | `code/99_simulate_panel.py`, then `INSTRUMENT=Z python code/05_estimate.py data/processed/panel_sim.parquet 6` | – | simulated panel with known parameters for validating step 5 |
+| 3b | `code/03b_first_stage_variants.py` | instrument | pre-declared first-stage variants; see `output/RESULTS_first_stage.md` |
 
 ## Getting the WFP price files (manual step)
 
