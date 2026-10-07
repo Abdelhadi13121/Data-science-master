@@ -84,11 +84,24 @@ The forest's feature importance is unstable across the two country halves: latit
 ## 6. State dependence (RQ4) and robustness
 
 - **State dependence on world prices:** W × 1[world price above its 24‑month average] and W × ΔG are insignificant at all horizons (|t| ≤ 1.3). Local drought effects do not depend on world market conditions. This confirms the null on compound amplification from the original design.
-- **Robustness (exploratory):** see `output/tables/robustness.csv` and Section 7, which will be filled in when the run completes.
+- **Robustness (exploratory):** see Section 7 and `output/tables/robustness.csv`.
 
 ## 7. Robustness (exploratory)
 
-*Pending (`09_robustness.py`).*
+Not pre‑specified. δ is in % per 1 s.d. of W, with t in parentheses.
+
+| Check | h = 4 | h = 6 | n (h = 6) |
+|---|---|---|---|
+| Baseline | 0.87 (3.41) | 0.99 (3.63) | 757,136 |
+| R1 Drop crisis/hyperinflation economies | 0.97 (3.65) | 1.03 (3.47) | 680,367 |
+| R2 Prices in USD | 0.66 (2.43) | 0.76 (2.64) | 783,868 |
+| R3 Cluster by country only | 0.87 (3.67) | 0.99 (3.95) | 757,136 |
+| R4 Sample ending 2019 | 1.01 (2.49) | 1.08 (2.37) | 338,165 |
+| R6 Cereals only | 0.85 (3.27) | 0.96 (3.52) | 674,710 |
+| R5 Monthly innovation of W (not the level) | 0.10 (0.90) | 0.13 (1.05) | 757,136 |
+
+- **R1–R4 and R6:** the effect survives dropping crisis economies, using USD prices, alternative clustering, the pre‑2020 sample, and excluding roots and tubers.
+- **R5:** month‑to‑month changes in the 3‑month index have no detectable effect. Prices respond to **accumulated seasonal conditions**, not to monthly fluctuations, which is consistent with harvest‑based supply effects. The paper should state that the estimand is the effect of a persistent seasonal anomaly.
 
 ## Link to the original proposal
 The exporter‑heat instrument raised world cereal prices by 6–8% (aggregate F ≈ 8–12) but was too weak in the market panel. The paper therefore reports the global pass‑through only as conditional correlations (about 20% within 6–8 months) and an Anderson–Rubin bound at two months, [−0.39, 0.11]. See `RESULTS_main.md`.
