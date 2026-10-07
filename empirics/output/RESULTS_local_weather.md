@@ -138,3 +138,46 @@ All results below are δ at h = 6, in % per 1 s.d. of W, with t in parentheses.
 | Market‑specific detrending | 0.96 | 3.63 |
 
 The effect rises steadily with the aggregation window, so prices respond to accumulated seasonal anomalies. The baseline is conservative. Clipping and detrending do not matter.
+
+## 9. Mechanism, policy moderators and welfare (PAP Addendum A; exploratory, `11_mechanism_moderators.py`)
+
+### M1 – Production mechanism
+FAOSTAT, country × crop × year, 2000–2024, 86 countries, 7,233 observations. Fixed effects: country × crop and crop × year; standard errors clustered by country.
+
+| Crop | Effect of annual mean W (per 1 s.d.) on ln(production) | t |
+|---|---|---|
+| **Pooled** | **−7.4%** | −3.17 |
+| Maize | −11.3% | −3.45 |
+| Sorghum | −16.9% | −3.02 |
+| **Rice** | **−6.3%** | −2.28 |
+| Millet | −6.6% | −1.24 |
+| Wheat | −3.6% | −0.71 |
+| Cassava / yams / plantains | −0.6 / −2.3 / −2.7% | ≤ 0.8 in absolute value |
+
+- **Traded vs. local:** the traded × W interaction is +3.2 pp (t = 0.93). Local weather lowers rice and wheat production about as much as other crops.
+- **Interpretation:** rice *prices* still do not respond (Section 4). The price contrast therefore reflects **trade arbitrage, not an absence of supply shocks.** Imports cap the price of traded staples.
+- **Roots and tubers:** production does not respond, yet prices do. This points to substitution away from scarce cereals. FAOSTAT root‑crop data are also known to be noisy, so this is not over‑interpreted.
+
+### M2 – Policy moderators of the price effect at h = 6
+73 countries, 547,980 market‑months; two‑way clustering by country and month. Interactions are per 1 s.d. of the moderator, in percentage points.
+
+| Moderator | One at a time | Joint |
+|---|---|---|
+| Cereal import dependence (FBS 2010–13; s.d. 0.25) | −0.25 (t −1.43) | −0.28 (t −1.68) |
+| Conflict exposure (log UCDP fatalities, 50 km, t−12..t−1) | +0.11 (t 0.44) | +0.15 (t 0.66) |
+| Remoteness (log km to the nearest city ≥ 500k) | +0.13 (t 1.23) | +0.19 (t 1.74) |
+| Main effect W in the same sample | 0.92–0.94 (t ≈ 3.2) | 0.92 (t 3.26) |
+
+- **Direction:** consistent with the arbitrage mechanism. Import‑dependent countries respond less and remote markets respond more.
+- **Precision:** no moderator is significant at 5%. These results are reported as suggestive. Conflict exposure does not change the effect.
+
+### M3 – Welfare exposure
+Staple‑basket price increase per 1‑s.d. drought at 6 months = Σ_k (calorie share_k × δ_k), with FBS calorie shares for 2010–13.
+
+| Statistic | Value |
+|---|---|
+| Median across WFP countries | 0.79% |
+| Interquartile range | 0.52–1.19% |
+| Most exposed | DR Congo 1.73%, Uganda 1.58%, Niger 1.57%, Malawi 1.56%, Zambia 1.55%, Ghana 1.55%, Rwanda 1.51% |
+
+The most exposed countries get 80–93% of their staple calories from locally produced maize, coarse grains and roots. The exposure is, by construction, almost a linear function of that share (r = 0.996), so this is a descriptive mapping, not separate evidence.
