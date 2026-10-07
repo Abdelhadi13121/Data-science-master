@@ -1,6 +1,6 @@
 # Empirics: compound climate × world-price shocks in local food markets
 
-Replication pipeline for the proposal in `../research-proposal/`. Run the scripts in order.
+Replication pipeline for the proposal in `../research-proposal/`. Install dependencies with `pip install -r requirements.txt` (Python 3.11+), then run the scripts in order.
 
 | Step | Script | Input | Output |
 |---|---|---|---|
