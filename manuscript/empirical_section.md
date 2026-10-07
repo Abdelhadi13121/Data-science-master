@@ -212,11 +212,13 @@ Weather might instead set off conflict, which then raises prices, the feedback R
 
 What remains is a local supply shortfall passed through markets that are integrated for traded staples and segmented for local ones. The production results, with output falling for every major cereal, support that reading.
 
-## 7.3 Implications
+## 7.3 Policy implications
 
 Weather-driven price risk concentrates in non-traded staples in arid markets, and that is where price monitoring and seasonal food assistance should go. The out-of-sample calibration shows that market characteristics known in advance can identify these places. In the most exposed tercile, a two-standard-deviation drought implies staple prices about 4 percent higher within six months. For a household spending half its budget on staples, that is a real income loss of about 2 percent from local weather alone.
 
 Openness protects the staples that are traded. Lowering border frictions for maize, the one local staple that moves across regional borders, should narrow the gap, in line with Villoria (2026). World price spikes do not make local weather shocks worse, so policies aimed at the two risks can be designed separately.
+
+These findings generalize beyond the countries in the sample wherever two conditions hold: a large share of calories comes from staples that rarely cross borders, and local supply depends on rainfed production. That describes most of Sub-Saharan Africa and parts of South Asia and Central America. Where diets rest on imported rice or wheat, as in much of North Africa and the Middle East, local weather matters less for prices and world-market risk matters more.
 
 ## 7.4 Limitations
 

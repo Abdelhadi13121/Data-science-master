@@ -17,7 +17,7 @@ subtitle: "Companion to Empirical_section_Food_Policy_draft.docx"
 
 # 2. Word count and budget
 
-The budget assumes a limit of L = 8,000 words excluding references. **Check the current *Food Policy* guide for authors**; this limit is an assumption.
+Food Policy (guide saved in FoodPolicy_author_guidelines.md) expects 6,000–10,000 words for the whole submission, including abstract, tables, references and appendices.
 
 | Section | Words | Budget (L = 8,000) |
 |---|---|---|
