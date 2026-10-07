@@ -10,8 +10,8 @@ For h = 0..H, with y_h = ln p_{i,t+h} - ln p_{i,t-1} (i = market x commodity ser
         estimated separately for drought (W > 1) and normal (|W| < 0.5) market-months.
 
 Controls: 3 lags of dlnp, dG, W, Z.  FE: series x calendar-month, country x year.
-SE: clustered by country (pyfixest/linearmodels), so inference is robust to arbitrary
-within-country spatial and serial correlation.
+SE: two-way clustered by country and month (the instrument varies only by commodity-month,
+so month clustering is essential); AR weak-IV-robust confidence sets, same clustering.
 
 Usage: python 05_estimate.py [panel.parquet] [H]
 """
@@ -49,6 +49,7 @@ def prepare(p, H):
     p["WdG"] = p.W * p.dG
     p["fe_sm"] = p.series + "_" + p.date.dt.month.astype(str)
     p["fe_ky"] = p.countryiso3 + "_" + p.date.dt.year.astype(str)
+    p["ym"] = p.date.dt.strftime("%Y-%m")
     return p
 
 
@@ -69,7 +70,7 @@ def run_rf_ols(p, H, groups):
         ctrl = " + ".join(CTRL)
         for name, fml in [("RF", f"y{h} ~ W + Z + WZ + dE + {ctrl} | fe_sm + fe_ky"),
                           ("OLS", f"y{h} ~ W + dG + WdG + dE + {ctrl} | fe_sm + fe_ky")]:
-            m = pf.feols(fml, d, vcov={"CRV1": "countryiso3"})
+            m = pf.feols(fml, d, vcov={"CRV1": "countryiso3+ym"})
             t = m.tidy()
             for v in (["W", "Z", "WZ"] if name == "RF" else ["W", "dG", "WdG"]):
                 rows.append(dict(model=name, h=h, term=v, coef=t.loc[v, "Estimate"], se=t.loc[v, "Std. Error"], n=m._N))
@@ -83,11 +84,74 @@ def run_2sls(p, H, groups):
         cols = [f"y{h}", "W", "dG", "WdG", "Z", "WZ", "dE"] + CTRL
         r = fe_demean(d, cols)
         m = IV2SLS(r[f"y{h}"], r[["W", "dE"] + CTRL], r[["dG", "WdG"]], r[["Z", "WZ"]]).fit(
-            cov_type="clustered", clusters=pd.factorize(d.countryiso3)[0])
+            cov_type="clustered", clusters=np.column_stack([pd.factorize(d.countryiso3)[0], pd.factorize(d.ym)[0]]))
         fs = m.first_stage.diagnostics
         for v in ("W", "dG", "WdG"):
             rows.append(dict(model="2SLS", h=h, term=v, coef=m.params[v], se=m.std_errors[v], n=int(m.nobs),
                              fs_F_dG=float(fs.loc["dG", "f.stat"]), fs_F_WdG=float(fs.loc["WdG", "f.stat"])))
+    return pd.DataFrame(rows)
+
+
+def _cluster_meat(S_parts, ids):
+    """Two-way (country, month) cluster 'meat' for score contributions.
+    S_parts: (n, k) array of per-observation scores; ids: list of integer cluster arrays."""
+    out = 0
+    for sign, idv in ids:
+        G = pd.DataFrame(S_parts).groupby(idv).sum().to_numpy()
+        out = out + sign * G.T @ G
+    return out
+
+
+def anderson_rubin(p, H, groups, grid_b=np.linspace(-1.5, 2.5, 161), grid_g=np.linspace(-1.5, 1.5, 121)):
+    """Weak-IV-robust AR confidence sets, two-way clustered (country, month).
+    Model: y = b*dG + g*(W x dG) + exog; instruments (Z, W x Z).  Scores z_i*u_i(b,g) are
+    linear in (b, g), so cluster sums are computed once and the grid is evaluated in closed form.
+    Reports (i) joint AR set projected on b and on g (chi2(2), conservative) and
+    (ii) single-endogenous AR set for b using Z only (chi2(1))."""
+    from scipy.stats import chi2
+    rows = []
+    for h in range(H + 1):
+        d = p[p.group.isin(groups)].dropna(subset=[f"y{h}", "W", "Z", "dG", "dE"] + CTRL)
+        cols = [f"y{h}", "dG", "WdG", "Z", "WZ", "W", "dE"] + CTRL
+        r = fe_demean(d, cols)
+        X = r[["W", "dE"] + CTRL].to_numpy()
+        P = lambda v: v - X @ np.linalg.lstsq(X, v, rcond=None)[0]  # FWL partial-out exog
+        y, d1, d2 = P(r[f"y{h}"].to_numpy()), P(r.dG.to_numpy()), P(r.WdG.to_numpy())
+        Zm = np.column_stack([P(r.Z.to_numpy()), P(r.WZ.to_numpy())])
+        cty = pd.factorize(d.countryiso3)[0]
+        ym = pd.factorize(d.date)[0]
+        both = pd.factorize(pd.Series(cty).astype(str) + "_" + pd.Series(ym).astype(str))[0]
+        ids = [(1, cty), (1, ym), (-1, both)]
+        # cluster sums of the score components, computed once per clustering dimension;
+        # scores z_i*(y_i - b d1_i - g d2_i) are linear in (b, g)
+        def gsum(v, k):
+            return [(sg, pd.DataFrame(Zm[:, :k] * v[:, None]).groupby(idv).sum().to_numpy()) for sg, idv in ids]
+        Gk = {k: {"y": gsum(y, k), "d1": gsum(d1, k), "d2": gsum(d2, k)} for k in (1, 2)}
+
+        def stat(b, g, k=2):
+            G = Gk[k]
+            m, V = 0, 0
+            for j, (sg, Gy) in enumerate(G["y"]):
+                S = Gy - b * G["d1"][j][1] - g * G["d2"][j][1]
+                V = V + sg * S.T @ S
+                if j == 0:
+                    m = S.sum(0)
+            return float(m @ np.linalg.pinv(V) @ m)
+
+        # (ii) single endogenous dG, instrument Z only: AR test of y - b*dG on Z
+        acc_b = [bb for bb in grid_b if stat(bb, 0.0, k=1) < chi2.ppf(0.95, 1)]
+        # (i) joint AR set for (b, g), projected on each coordinate
+        crit2 = chi2.ppf(0.95, 2)
+        acc = [(bb, gg) for bb in grid_b for gg in grid_g if stat(bb, gg) < crit2]
+        gs = [x[1] for x in acc]
+        bs = [x[0] for x in acc]
+        rows.append(dict(h=h, n=len(d),
+                         AR_b_lo=min(acc_b) if acc_b else np.nan, AR_b_hi=max(acc_b) if acc_b else np.nan,
+                         AR_b_bounded=bool(acc_b) and min(acc_b) > grid_b[0] and max(acc_b) < grid_b[-1],
+                         ARjoint_b_lo=min(bs) if bs else np.nan, ARjoint_b_hi=max(bs) if bs else np.nan,
+                         AR_g_lo=min(gs) if gs else np.nan, AR_g_hi=max(gs) if gs else np.nan,
+                         AR_g_bounded=bool(gs) and min(gs) > grid_g[0] and max(gs) < grid_g[-1],
+                         AR_rejects_g0=(min(gs) > 0 or max(gs) < 0) if gs else None))
     return pd.DataFrame(rows)
 
 
@@ -124,6 +188,9 @@ if __name__ == "__main__":
     rf.to_csv(f"{OUT}/rf_ols_{tag}.csv", index=False)
     iv = run_2sls(p, H, traded)
     iv.to_csv(f"{OUT}/iv_{tag}.csv", index=False)
+    ar = anderson_rubin(p, H, traded)
+    ar.to_csv(f"{OUT}/ar_{tag}.csv", index=False)
+    print(ar.round(3).to_string())
     dm = pd.concat([run_dml(p, h, traded) for h in (0, 3, 6, 12) if h <= H])
     parts = [rf, iv, dm.rename(columns={"regime": "term"})]
     if (p.group == "nontraded").any():

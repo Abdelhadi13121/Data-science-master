@@ -29,17 +29,20 @@ import xarray as xr
 ROOT = os.path.join(os.path.dirname(__file__), "..")
 RAW, PROC = f"{ROOT}/data/raw", f"{ROOT}/data/processed"
 
-GROUP_PATTERNS = [  # order matters
+EXCLUDE = r"oil|milling cost|seed|food aid|soy blend|leaves|starch|buckwheat|tortilla|paddy|unmilled"
+GROUP_PATTERNS = [  # evaluated in order, after EXCLUDE
     ("rice", r"\brice\b"),
-    ("wheat", r"wheat|bread|\bflour\b(?!.*(maize|cassava|corn|sorghum|millet))|pasta|macaroni|semolina"),
-    ("maize", r"maize|corn"),
+    ("maize", r"maize|\bcorn\b"),
     ("coarse", r"sorghum|millet|teff"),
-    ("nontraded", r"cassava|gari|plantain|yam|sweet potato|potato|cowpea|groundnut"),
+    ("nontraded", r"cassava|gari|plantain|\byam\b|cocoyam|sweet potato"),
+    ("wheat", r"wheat|bread|pasta|macaroni|spaghetti|semolina|\bflour\b"),
 ]
 
 
 def cereal_group(name):
     n = name.lower()
+    if re.search(EXCLUDE, n):
+        return None
     for g, pat in GROUP_PATTERNS:
         if re.search(pat, n):
             return g
@@ -131,7 +134,7 @@ def local_weather(markets, dates):
     return W[W.date.isin(dates)]
 
 
-def main(wfp_glob=f"{RAW}/wfp/*.csv"):
+def main(wfp_glob=f"{RAW}/wfp/wfp_food_prices_global_*.csv"):
     files = sorted(glob.glob(wfp_glob))
     if not files:
         sys.exit(f"No WFP files found at {wfp_glob}. See README: download HDX 'Global - Food Prices' yearly CSVs.")
