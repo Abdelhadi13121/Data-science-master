@@ -16,7 +16,7 @@ Replication pipeline for the proposal in `../research-proposal/`. Run the script
 
 ## Getting the WFP price files (manual step)
 
-The cloud environment that built this pipeline could not reach `data.humdata.org`, because the host is blocked by network policy. To get the files:
+To download the files manually (or allow `data.humdata.org` in the environment network settings and run the download in `code/00_download_wfp.py`):
 
 1. Open <https://data.humdata.org/dataset/global-wfp-food-prices>.
 2. Download the yearly CSVs `wfp_food_prices_global_YYYY.csv` (2000–2026; about 500 MB in total).
