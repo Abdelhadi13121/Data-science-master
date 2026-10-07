@@ -116,22 +116,43 @@ def local_weather(markets, dates):
     pts = pr.sel(latitude=xr.DataArray(markets.latitude.values, dims="m"),
                  longitude=xr.DataArray(markets.longitude.values % 360, dims="m"), method="nearest").load()
     w["precip"] = pd.DataFrame(pts.values, index=pd.to_datetime(pts.time.values).to_period("M").to_timestamp(), columns=markets.mkey.values)
+    # 3-month aggregates (SPI/SPEI convention), then robust standardization against the
+    # 1991-2020 market x calendar-month climatology: sd floored at the 10th percentile of
+    # positive sds across markets for that variable, z clipped to +/-4.
+    agg = {"tmean": "mean", "hdd30": "sum", "swvl1": "mean", "precip": "sum"}
     out = []
     for k, m in w.items():
+        m = m.sort_index()
+        m = m.rolling(3, min_periods=2).sum() if agg[k] == "sum" else m.rolling(3, min_periods=2).mean()
         base = m[(m.index.year >= 1991) & (m.index.year <= 2020)]
         mu = base.groupby(base.index.month).mean()
-        sd = base.groupby(base.index.month).std().replace(0, np.nan)
-        z = (m - mu.loc[m.index.month].values) / sd.loc[m.index.month].values
+        sd = base.groupby(base.index.month).std()
+        pos = sd.to_numpy()[sd.to_numpy() > 0]
+        floor = np.nanquantile(pos, 0.10) if pos.size else 1.0
+        sd = sd.where(sd > floor, floor)
+        z = ((m - mu.loc[m.index.month].values) / sd.loc[m.index.month].values).clip(-4, 4)
+        # markets with (near-)zero heat exposure in a season carry no heat signal
+        if k == "hdd30":
+            z = z.where(mu.loc[m.index.month].values > 1.0)
         out.append(z.stack(future_stack=True).rename(f"z_{k}"))
     W = pd.concat(out, axis=1)
     W.index.names = ["date", "mkey"]
     W = W.reset_index()
-    # cool market-months have no HDD30 variance: use the mean-temperature anomaly there
+    # where extreme heat is climatologically absent, use the mean-temperature anomaly
     W["z_heat"] = W.z_hdd30.fillna(W.z_tmean)
-    W["adverse"] = W.z_heat.fillna(0) - W.z_swvl1.fillna(0) - W.z_precip.fillna(0)
-    W = W.sort_values(["mkey", "date"])
-    W["W"] = W.groupby("mkey").adverse.transform(lambda s: s.rolling(3, min_periods=2).mean())
+    raw = (W.z_heat.fillna(0) - W.z_swvl1.fillna(0) - W.z_precip.fillna(0)) / 3
+    W["W"] = (raw - raw.mean()) / raw.std()
     return W[W.date.isin(dates)]
+
+
+def rebuild_weather():
+    """Recompute local weather on an existing panel without re-reading the price files."""
+    p = pd.read_parquet(f"{PROC}/panel.parquet")
+    p = p.drop(columns=[c for c in p.columns if c.startswith("z_") or c in ("adverse", "W")])
+    mk = p.groupby("mkey", as_index=False)[["latitude", "longitude"]].first()
+    p = p.merge(local_weather(mk, p.date.unique()), on=["mkey", "date"], how="left")
+    p.to_parquet(f"{PROC}/panel.parquet", index=False)
+    print(p.W.describe().round(3))
 
 
 def main(wfp_glob=f"{RAW}/wfp/wfp_food_prices_global_*.csv"):
@@ -156,4 +177,7 @@ def main(wfp_glob=f"{RAW}/wfp/wfp_food_prices_global_*.csv"):
 
 
 if __name__ == "__main__":
-    main(*sys.argv[1:])
+    if sys.argv[1:] == ["--weather-only"]:
+        rebuild_weather()
+    else:
+        main(*sys.argv[1:])
