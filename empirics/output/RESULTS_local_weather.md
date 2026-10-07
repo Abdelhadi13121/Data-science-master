@@ -181,3 +181,14 @@ Staple‑basket price increase per 1‑s.d. drought at 6 months = Σ_k (calorie 
 | Most exposed | DR Congo 1.73%, Uganda 1.58%, Niger 1.57%, Malawi 1.56%, Zambia 1.55%, Ghana 1.55%, Rwanda 1.51% |
 
 The most exposed countries get 80–93% of their staple calories from locally produced maize, coarse grains and roots. The exposure is, by construction, almost a linear function of that share (r = 0.996), so this is a descriptive mapping, not separate evidence.
+
+## 10. Positioning relative to the closest literature (checked 2026‑10‑07)
+
+| Paper | Scope | Shock | Key finding | How this paper differs |
+|---|---|---|---|---|
+| Okou, Spray & Unsal (2022, IMF WP 22/135) | 15 SSA countries, 5 staples | Global prices; natural‑disaster and war dummies | Pass‑through ≈ 1 for imported staples; disasters raise prices 1.8% | Mirror image: **local** staples respond to **local** weather. Continuous gridded shocks at each market, 86 countries, local projections with placebos, production mechanism, ML heterogeneity |
+| Brown & Kshirsagar (2015, *GEC*) | 554 markets, 2008–12 | Local weather and international prices | 20% of markets weather‑sensitive | Pooled causal estimates over 26 years; tradability gradient; selection tests |
+| Kotz et al. (2024, *Commun. Earth Environ.*) | National CPIs, 121 countries | Temperature | Heat raises food inflation for 12 months | Market‑level data; who pays (tradability, aridity); supply mechanism |
+| Bohorquez‑Penuela et al. (2026); Nino (2026, *Food Policy*) | Colombia | Weather or landslides | Heterogeneity driven by farm and network characteristics | Global scope; causal forest validated out of sample |
+
+**Proposed contribution statement.** *Across about 25,000 local markets in 86 countries, adverse local weather raises staple prices by about 1% per s.d. within six months. The burden falls entirely on locally produced staples. Traded rice and wheat are insulated even though their local production falls. Arid and low‑import markets bear up to four times the average effect. World‑market conditions do not amplify local shocks.*
