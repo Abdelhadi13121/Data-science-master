@@ -117,10 +117,15 @@ if __name__ == "__main__":
     p = prepare(pd.read_parquet(path), H)
     traded = ["wheat", "maize", "rice"]
     rf = run_rf_ols(p, H, traded)
+    rf.to_csv(f"{OUT}/rf_ols_{tag}.csv", index=False)
     iv = run_2sls(p, H, traded)
+    iv.to_csv(f"{OUT}/iv_{tag}.csv", index=False)
     dm = pd.concat([run_dml(p, h, traded) for h in (0, 3, 6, 12) if h <= H])
-    placebo = run_rf_ols(p, min(H, 6), ["nontraded"]) if (p.group == "nontraded").any() else pd.DataFrame()
-    res = pd.concat([rf, iv, dm.rename(columns={"regime": "term"}), placebo.assign(model=lambda x: "placebo_" + x.model)])
+    parts = [rf, iv, dm.rename(columns={"regime": "term"})]
+    if (p.group == "nontraded").any():
+        pl = run_rf_ols(p, min(H, 6), ["nontraded"])
+        parts.append(pl.assign(model="placebo_" + pl.model))
+    res = pd.concat(parts)
     res["t"] = res.coef / res.se
     res.to_csv(f"{OUT}/main_{tag}.csv", index=False)
     pd.set_option("display.width", 200)
