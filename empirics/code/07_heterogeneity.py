@@ -36,7 +36,16 @@ def xyz(lat, lon):
     return np.column_stack([np.cos(la) * np.cos(lo), np.cos(la) * np.sin(lo), np.sin(la)])
 
 
+MOD_CACHE = f"{ROOT}/data/processed/market_moderators.csv"
+
+
 def market_moderators(mk):
+    # The ERA5 grids (1.4 GB) are not shipped in the replication package; their market-level
+    # summaries are cached in MOD_CACHE. Delete the cache to recompute from data/raw.
+    if os.path.exists(MOD_CACHE):
+        c = pd.read_csv(MOD_CACHE)
+        if set(mk.mkey) <= set(c.mkey):
+            return mk.merge(c.drop(columns=["latitude", "longitude"], errors="ignore"), on="mkey", how="left")
     files = sorted(glob.glob(f"{ROOT}/data/raw/era5_monthly/*.npz"))
     lat = np.linspace(90, -90, 721)
     lon = np.arange(1440) * 0.25
@@ -60,6 +69,7 @@ def market_moderators(mk):
                  longitude=xr.DataArray(mk.longitude.values % 360, dims="m"), method="nearest").load()
     mk["aridity_logprecip"] = np.log(pts.values * 365 + 1)  # mm/day -> mm/yr
     mk["abs_lat"] = mk.latitude.abs()
+    mk.to_csv(MOD_CACHE, index=False)
     return mk
 
 

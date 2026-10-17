@@ -25,6 +25,20 @@ lw = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(lw)
 RAW, OUT = f"{lw.ROOT}/data/raw", lw.OUT
 FAO = f"{RAW}/faostat"
+
+
+def unzip_if_needed(folder):
+    # The replication package ships the official FAOSTAT and UCDP zip files; extract them on first use.
+    import zipfile
+    for z in glob.glob(f"{folder}/*.zip"):
+        with zipfile.ZipFile(z) as zf:
+            for name in zf.namelist():
+                if name.endswith(".csv") and not os.path.exists(f"{folder}/{name}"):
+                    zf.extract(name, folder)
+
+
+unzip_if_needed(FAO)
+unzip_if_needed(f"{RAW}/ucdp")
 R_EARTH = 6371.0
 H = 6
 
