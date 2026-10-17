@@ -5,8 +5,10 @@ import re, subprocess, importlib.util, pandas as pd
 from scipy.stats import norm
 
 spec = importlib.util.spec_from_file_location("b", "build.py")
-T = "../empirics/output/tables/"
-F = "../empirics/output/figures/"
+# Repo layout: manuscript/ next to empirics/; replication-package layout: manuscript/ next to output/.
+_OUT = "../empirics/output" if __import__("os").path.isdir("../empirics/output") else "../output"
+T = f"{_OUT}/tables/"
+F = f"{_OUT}/figures/"
 
 def star(t):
     p = 2 * norm.sf(abs(t)); return "***" if p < .01 else "**" if p < .05 else "*" if p < .1 else ""
