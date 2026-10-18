@@ -50,7 +50,7 @@ Differential response relative to rice (pp):
 
 | h | Maize | Sorghum/millet | Cassava/yam/plantain | Wheat |
 |---|---|---|---|---|
-| 2 | **+1.41** (t 4.8) | **+1.01** (2.4) | +0.71 (1.6) | −0.25 (−1.2) |
+| 2 | **+1.40** (t 4.8) | **+1.01** (2.4) | +0.71 (1.6) | −0.25 (−1.2) |
 | 4 | **+1.67** (4.0) | **+1.40** (2.1) | +1.10 (1.8) | −0.18 (−0.7) |
 | 6 | **+1.19** (2.3) | +1.33 (1.7) | **+1.46** (2.6) | −0.00 (0.0) |
 
@@ -209,3 +209,11 @@ Heat (HDD30 / Tmean) and soil moisture are averaged over all ERA5 land cells wit
 - **Tradability (200 km, pp vs. rice):** maize +1.58 (h2), +1.89 (h4); sorghum/millet +1.64 (h4); roots +1.43 (h6); wheat 0.00 (h6). Same pattern as the baseline, slightly larger.
 
 Reading: the effect rises monotonically with the radius and the point measure loses all explanatory power once supply-area weather is controlled for. Point weather attenuates δ_h, so the baseline is conservative.
+
+## 12. Forest calibration by quintile (PAP grouping)
+
+The PAP named quintiles; the paper reports terciles for power and discloses the quintiles (Section 5.3). Out-of-sample CATE quintiles, h = 6, two-way clustered:
+
+| Quintile | Q1 | Q2 | Q3 | Q4 | Q5 |
+|---|---|---|---|---|---|
+| δ₆ (%) | 0.50 (0.30) | 0.37 (0.17) | 0.42 (0.23) | 1.16 (0.45) | **2.82 (0.64)** |

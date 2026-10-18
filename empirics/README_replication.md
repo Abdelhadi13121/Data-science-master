@@ -46,7 +46,7 @@ pip install -r requirements.txt
 python run_all.py
 ```
 
-This takes about 1 to 2 hours on a laptop; the causal forest (`07`) and the robustness scripts are the slowest. Outputs overwrite `output/tables/` and `output/figures/`. The first run of `11` extracts the FAOSTAT and UCDP zip files in place.
+This takes about 1 to 2 hours on a laptop; the causal forest (`07`) and the robustness scripts are the slowest. Outputs overwrite `output/tables/` and `output/figures/`. The first run of `11` extracts the FAOSTAT and UCDP zip files in place. Without the ERA5 grids, `10` keeps the shipped index-variant rows (S1) and entry test, and `07` uses `data/processed/market_moderators.csv`.
 
 **Full rebuild (raw data to panel, then analysis):**
 
@@ -74,7 +74,7 @@ INSTRUMENT=Z python code/05_estimate.py data/processed/panel_sim.parquet 6
 | `04_build_wfp_panel.py` | `data/processed/panel.parquet` | Sample and W index (Sections 3.1 to 3.3) |
 | `05_estimate.py`, `05b_lpiv_cumulative.py` | `rf_ols_iv_ar_panel.csv`, `lpiv_cumulative_panel.csv` | Table A.2 |
 | `06_local_weather.py` | `lw_main.csv`, `lw_placebo.csv` | Tables 2 and 3, placebo tests (Section 5.1 to 5.2) |
-| `07_heterogeneity.py` | `het_terciles.csv`, `het_blp.csv`, `het_forest_importance.csv` | Table 4 |
+| `07_heterogeneity.py` | `het_terciles.csv`, `het_quintiles.csv`, `het_blp.csv`, `het_forest_importance.csv` | Table 4; quintiles (PAP grouping) in Section 5.3 |
 | `08_figures.py` | `fig1_main_irf.png`, `fig2_tradability.png`, `fig3_components.png` | Figures 1 to 3 |
 | `09_robustness.py` | `robustness.csv` | Table 7 |
 | `10_selection_sensitivity.py` | `sensitivity.csv`, `selection_entry.csv`, `multiple_testing.csv` | Table 7; Holm correction; entry test (Section 6) |

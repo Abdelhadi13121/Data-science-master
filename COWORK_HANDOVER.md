@@ -54,9 +54,9 @@ Closest papers: Brown & Kshirsagar (2015, *GEC*), Chen & Villoria (2019, *ERL*),
 |---|---|
 | Effect of +1 s.d. W on local staple prices | 0.42% (h = 2), 0.87% (h = 4), **0.99% (h = 6, 95% CI 0.46 to 1.53)**, 0.84% (h = 12). Holm-adjusted p ≤ 0.009 for h = 4 to 12 |
 | Placebos (lead, pre-trend) | All pass (t between −0.6 and −1.0) |
-| Difference from rice (pp) | Maize +1.41 (h = 2), +1.67 (h = 4); sorghum/millet +1.40 (h = 4); roots +1.46 (h = 6); wheat −0.00 |
+| Difference from rice (pp) | Maize +1.40 (h = 2), +1.67 (h = 4); sorghum/millet +1.40 (h = 4); roots +1.46 (h = 6); wheat −0.00 |
 | Production (FAOSTAT) | −7.4% per s.d. pooled; rice −6.3%, so rice supply falls but its price does not move |
-| Causal-forest terciles (out of sample, h = 6) | 0.47 / 0.50 / **2.16%**; high minus middle 1.66 pp (t 3.8) |
+| Causal-forest terciles (out of sample, h = 6) | 0.47 / 0.50 / **2.16%**; high minus middle 1.66 pp (t 3.8). PAP quintiles: 0.50 / 0.37 / 0.42 / 1.16 / **2.82%** (`het_quintiles.csv`) |
 | Aridity moderator | −0.44 pp per s.d. of log rainfall (t −2.95), i.e. drier markets respond more |
 | Moderators (import dependence, conflict, remoteness) and world-price state | Not significant; reported with minimum detectable effects (MDEs) |
 | Welfare exposure | Median 0.79% of the staple basket; DR Congo 1.73% |
@@ -81,7 +81,7 @@ Closest papers: Brown & Kshirsagar (2015, *GEC*), Chen & Villoria (2019, *ERL*),
 | `manuscript/FoodPolicy_author_guidelines.md` | Journal requirements and compliance checklist |
 | `manuscript/Notes_for_authors.md` | Audit, literature screen, references to verify, referee memo (the five weakest points and fixes) |
 
-**Length:** 9,985 words including tables, references and appendix. The journal limit is 10,000, so any addition must be offset by a cut.
+**Length:** 9,997 words including tables, references and appendix. The journal limit is 10,000, so any addition must be offset by a cut.
 
 **Writing rules used:**
 - American English; author–year citations.
