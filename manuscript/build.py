@@ -29,7 +29,7 @@ def table7():
     for R in (50, 100, 200):
         x = sa[(sa.weather == f"{R} km") & (sa.spec == "main") & (sa.h == 6)]
         if len(x):
-            add("Measurement", f"Heat and soil moisture averaged within {R} km", x.iloc[0])
+            add("Measurement", f"Supply-area weather, {R} km", x.iloc[0])
     add("Measurement", "Prices in US dollars", g(rb, "R2 USD prices"))
     add("Measurement", "Monthly innovation of W instead of level", g(rb, "R5 monthly innovation of W"))
     for _, x in w.iterrows():

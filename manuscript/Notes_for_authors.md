@@ -75,7 +75,7 @@ Records were scored on relevance (food-price terms, weather terms, local or mark
 
 1. **"Selection on observables with weather is standard; what is new?"** Lead the introduction with the tradability gradient and the out-of-sample heterogeneity, not with the average effect. The average effect of about 1% confirms prior work; the who-pays result and the forest calibration (2.16% vs. about 0.5%) are the contribution. Okou et al. (2022) is the natural foil: imported staples follow world prices, local staples follow local weather.
 
-2. **"Weather is measured at the market, not over its supply area."** This attenuates δ_h toward zero, so the estimates are conservative. A strong revision would compute W over a 100–200 km buffer, or over cropland within the market's catchment. The ERA5 grids already downloaded make this a short extension in `04_build_wfp_panel.py`.
+2. **"Weather is measured at the market, not over its supply area."** DONE (`code/13_supply_area.py`, Table 7, Section 6). Averaging heat and soil moisture over land within 50/100/200 km raises δ₆ to 1.02/1.08/1.18%; in a joint regression the 200 km measure keeps the effect (1.24, SE 0.45) and point W drops to −0.06. A further step would weight by cropland or by actual trade flows.
 
 3. **"Policy moderators are insignificant."** They are near their MDEs (import dependence −0.28 vs. MDE 0.46; remoteness +0.19 vs. MDE 0.30). Better measures would sharpen them: time-varying import shares, and travel time rather than straight-line distance. The `malariaatlas.org` access you added covers the main domain but not `data.malariaatlas.org`; adding that subdomain allows the Weiss et al. (2018) travel-time raster.
 

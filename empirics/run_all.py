@@ -32,9 +32,12 @@ ANALYSIS = [  # data/processed -> output/
     ["code/11_mechanism_moderators.py"],        # Tables 1, 5, 6 (descriptives, production, moderators, welfare)
     ["code/12_winsorize.py"],                   # Table 7 (winsorized)
 ]
+ERA5_ANALYSIS = [  # also needs data/raw/era5_monthly
+    ["code/13_supply_area.py"],                 # Table 7 (supply-area rows)
+]
 
 if __name__ == "__main__":
-    steps = (BUILD if "--full" in sys.argv else []) + ANALYSIS
+    steps = (BUILD + ANALYSIS + ERA5_ANALYSIS) if "--full" in sys.argv else ANALYSIS
     for step in steps:
         t0 = time.time()
         print(f"\n=== {' '.join(step)}", flush=True)

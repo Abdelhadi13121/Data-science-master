@@ -192,3 +192,20 @@ The most exposed countries get 80–93% of their staple calories from locally pr
 | Bohorquez‑Penuela et al. (2026); Nino (2026, *Food Policy*) | Colombia | Weather or landslides | Heterogeneity driven by farm and network characteristics | Global scope; causal forest validated out of sample |
 
 **Proposed contribution statement.** *Across about 25,000 local markets in 86 countries, adverse local weather raises staple prices by about 1% per s.d. within six months. The burden falls entirely on locally produced staples. Traded rice and wheat are insulated even though their local production falls. Arid and low‑import markets bear up to four times the average effect. World‑market conditions do not amplify local shocks.*
+
+## 11. Supply-area weather (exploratory; `code/13_supply_area.py`)
+
+Heat (HDD30 / Tmean) and soil moisture are averaged over all ERA5 land cells within R km of each market (cos-latitude weights); W is then rebuilt exactly as in the baseline. GPCP (2.5°) is unchanged. Main specification, two-way clustering.
+
+| h | 0 | 2 | 4 | 6 | 8 | 10 | 12 |
+|---|---|---|---|---|---|---|---|
+| Point (baseline) | −0.00 | 0.42 | 0.87 | 0.99 | 0.76 | 0.78 | 0.84 |
+| 50 km | 0.01 | 0.44 | 0.91 | 1.02 | 0.78 | 0.82 | 0.85 |
+| 100 km | 0.02 | 0.47 | 0.98 | 1.08 | 0.85 | 0.86 | 0.87 |
+| 200 km | 0.03 | 0.51 | 1.05 | **1.18** (SE 0.33) | 0.92 | 0.89 | 0.91 |
+
+- **Correlation with point W:** 0.97 (50 km), 0.95 (100 km), 0.93 (200 km).
+- **Horse race at h = 6 (both measures jointly):** 200 km W 1.24 (SE 0.45) vs. point W −0.06 (SE 0.22); 100 km 0.98 (SE 0.45) vs. 0.11 (SE 0.27); 50 km 0.55 (SE 0.34) vs. 0.48 (SE 0.26).
+- **Tradability (200 km, pp vs. rice):** maize +1.58 (h2), +1.89 (h4); sorghum/millet +1.64 (h4); roots +1.43 (h6); wheat 0.00 (h6). Same pattern as the baseline, slightly larger.
+
+Reading: the effect rises monotonically with the radius and the point measure loses all explanatory power once supply-area weather is controlled for. Point weather attenuates δ_h, so the baseline is conservative.

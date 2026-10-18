@@ -55,7 +55,7 @@ python code/01_era5_monthly.py 1990 2026   # downloads ERA5 from gs://gcp-public
 python run_all.py --full
 ```
 
-`--full` re-runs `01`, `02` and `04` before the analysis stage. To also recompute the market moderators from the grids, delete `data/processed/market_moderators.csv` first. To re-download the WFP files, run `code/00_download_wfp.py` (needs access to data.humdata.org).
+`--full` re-runs `01`, `02` and `04` before the analysis stage, and `13` (supply-area weather) after it. To also recompute the market moderators from the grids, delete `data/processed/market_moderators.csv` first. To re-download the WFP files, run `code/00_download_wfp.py` (needs access to data.humdata.org).
 
 **Monte Carlo validation of the estimators:**
 
@@ -80,6 +80,7 @@ INSTRUMENT=Z python code/05_estimate.py data/processed/panel_sim.parquet 6
 | `10_selection_sensitivity.py` | `sensitivity.csv`, `selection_entry.csv`, `multiple_testing.csv` | Table 7; Holm correction; entry test (Section 6) |
 | `11_mechanism_moderators.py` | `descriptives.csv`, `mech_production.csv`, `moderators.csv`, `welfare_exposure.csv` | Tables 1, 5 and 6; welfare exposure (Section 5.5) |
 | `12_winsorize.py` | `winsorized.csv` | Table 7 |
+| `13_supply_area.py` | `supply_area.csv` | Table 7 (supply-area rows), Section 6. Needs the ERA5 grids |
 
 ## 5. Constructed variables
 

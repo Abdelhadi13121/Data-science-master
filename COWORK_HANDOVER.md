@@ -60,7 +60,7 @@ Closest papers: Brown & Kshirsagar (2015, *GEC*), Chen & Villoria (2019, *ERL*),
 | Aridity moderator | −0.44 pp per s.d. of log rainfall (t −2.95), i.e. drier markets respond more |
 | Moderators (import dependence, conflict, remoteness) and world-price state | Not significant; reported with minimum detectable effects (MDEs) |
 | Welfare exposure | Median 0.79% of the staple basket; DR Congo 1.73% |
-| Robustness (18 variants, Table 7) | 0.56 (1-month window) to 1.66 (pre-2010 series); only the monthly-innovation version of W is null |
+| Robustness (21 variants, Table 7) | 0.56 (1-month window) to 1.66 (pre-2010 series); only the monthly-innovation version of W is null |
 
 ## 5. Folder map (`replication_package/`)
 
@@ -81,7 +81,7 @@ Closest papers: Brown & Kshirsagar (2015, *GEC*), Chen & Villoria (2019, *ERL*),
 | `manuscript/FoodPolicy_author_guidelines.md` | Journal requirements and compliance checklist |
 | `manuscript/Notes_for_authors.md` | Audit, literature screen, references to verify, referee memo (the five weakest points and fixes) |
 
-**Length:** 9,909 words including tables, references and appendix. The journal limit is 10,000, so any addition must be offset by a cut.
+**Length:** 9,985 words including tables, references and appendix. The journal limit is 10,000, so any addition must be offset by a cut.
 
 **Writing rules used:**
 - American English; author–year citations.
@@ -100,7 +100,7 @@ Closest papers: Brown & Kshirsagar (2015, *GEC*), Chen & Villoria (2019, *ERL*),
 
 ## 7. Optional strengthening (from the referee memo)
 
-1. **Supply-area weather.** Compute W over a 100–200 km buffer, or over cropland around each market, instead of at the market point. This reduces attenuation and is the most valuable extension. It needs the ERA5 grids (`python code/01_era5_monthly.py 1990 2026`) and a change in `local_weather()` in `code/04_build_wfp_panel.py`.
+1. **Supply-area weather: DONE** in the cloud session (`code/13_supply_area.py`, `output/tables/supply_area.csv`, Table 7, Section 6). δ₆ rises to 1.02 / 1.08 / 1.18% for 50 / 100 / 200 km, and the 200 km measure absorbs the point measure in a joint regression (1.24 vs. −0.06). Re-running it needs the ERA5 grids; possible next step: cropland weighting.
 2. **Travel time instead of straight-line remoteness.** Use the Weiss et al. (2018) friction surface from the Malaria Atlas Project.
 3. **Root-and-tuber substitution test.** Interact W × roots with the cereal share of the diet; the calorie shares are already computed in `code/11`.
 4. **Online Appendix.** Collect the first-stage results, Anderson–Rubin sets and robustness tables from `output/RESULTS_*.md`.

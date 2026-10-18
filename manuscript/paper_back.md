@@ -5,7 +5,7 @@ Local weather moves local food prices, and it moves them in predictable places. 
 
 For food security policy the implication is to watch local staples in dry markets. These are the prices that move after a bad season, and these are the households that cannot turn to imports. Early warning systems that already combine weather and market data can use the estimates here to decide which prices to monitor, and humanitarian agencies can use the out-of-sample ranking of markets to place pre-positioned stocks and seasonal assistance. Trade policy helps only where food can be traded. Lowering barriers to regional maize trade would extend the protection that imports already give to rice and wheat.
 
-Two extensions would sharpen these results. Measuring weather over each market's supply area rather than at the market would reduce attenuation. Linking the price estimates to household survey data would turn the staple-basket exposure in Section 5.5 into welfare losses for specific groups of buyers and sellers.
+Two extensions would sharpen these results. Weather measured over each market's actual sourcing area, rather than a fixed radius, would reduce the remaining attenuation. Linking the price estimates to household survey data would turn the staple-basket exposure in Section 5.5 into welfare losses for specific groups of buyers and sellers.
 
 # Declaration of generative AI and AI-assisted technologies in the manuscript preparation process {.unnumbered}
 

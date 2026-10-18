@@ -172,13 +172,13 @@ Table 7 reports the six-month effect under alternative choices, grouped by the t
 
 {{TABLE7}}
 
-*Notes:* Each row changes one element of the baseline in the first row. Standard errors two-way clustered by country and month unless stated.
+*Notes:* Each row changes one element of the baseline in the first row. Supply-area weather averages ERA5 heat and soil moisture over land within the stated radius. Standard errors two-way clustered by country and month unless stated.
 
 Two falsification tests support the causal reading. Weather six months in the future, added to Eq. (2), has no effect on current price changes (−0.05 pp at h = 0, SE 0.07; −0.12 pp at h = 2, SE 0.19). Weather at month *t* does not predict price changes from t−4 to t−1 (−0.15 pp, SE 0.16). Under the decision rule in the pre-analysis plan, the causal interpretation stands.
 
 WFP decides which markets to monitor, often in response to crises, so we tested for selection in two ways. First, the month a market enters the panel is unrelated to mean W in the three preceding months (−0.05 pp against a mean monthly entry rate of 0.46 percent, SE 0.03; country × year and market fixed effects). Second, among series already monitored before 2010 the effect is larger, at 1.66 percent (SE 0.43), so the expansion of coverage after 2020 dilutes the estimate rather than producing it. Dropping ten crisis and hyperinflation economies gives 1.03 percent, and ending the sample in 2019 gives 1.08 percent.
 
-How W is built matters in one predictable way. The estimate rises with the aggregation window, from 0.56 percent for one month to 0.81, 0.99 and 1.40 percent for two, three and six months. Prices respond to accumulated seasonal anomalies, not to monthly weather, which makes our three-month baseline conservative. For the same reason the monthly innovation of the three-month index has no detectable effect (0.13 percent, SE 0.12). Capping z-scores at ±3 or ±5, removing the cap, or detrending W by market leaves the estimate between 0.94 and 1.02 percent. In US dollars the effect is 0.76 percent (SE 0.29); it is slightly smaller because dollar prices also carry exchange-rate noise. Winsorizing the outcome at the 1st and 99th percentiles gives {{WINS6}}.
+How W is built matters in one predictable way. The estimate rises with the aggregation window, from 0.56 percent for one month to 0.81, 0.99 and 1.40 percent for two, three and six months. Prices respond to accumulated seasonal anomalies, not to monthly weather, which makes our three-month baseline conservative. For the same reason the monthly innovation of the three-month index has no detectable effect (0.13 percent, SE 0.12). Averaging heat and soil moisture over land within 50, 100 and 200 km of the market raises the estimate to 1.02, 1.08 and 1.18 percent. Entered jointly with the point measure, the 200 km measure keeps the effect (1.24 percent, SE 0.45) and the point measure falls to −0.06 (SE 0.22), so point weather attenuates the baseline. Capping z-scores at ±3 or ±5, removing the cap, or detrending W by market leaves the estimate between 0.94 and 1.02 percent. In US dollars the effect is 0.76 percent (SE 0.29); it is slightly smaller because dollar prices also carry exchange-rate noise. Winsorizing the outcome at the 1st and 99th percentiles gives {{WINS6}}.
 
 Clustering on 2° or 5° grid cells crossed with month raises the t-statistic to 4.48 and 3.76, and clustering by country alone gives 3.95. The baseline two-way clustering by country and month is the most conservative of these.
 
@@ -200,7 +200,7 @@ Table 8 compares our estimates with the closest studies.
 | Kakpo et al. (2022); Letta et al. (2022) | Niger; India | Rainfall shocks; drought news | Drought amplifies seasonality; pre-harvest price rises | Confirms timing: the rainfall effect peaks 4–6 months after the anomaly |
 | Nino (2026) | Colombia, weekly | Landslide road closures (IV); causal forest | +0.5–0.9% in one week; peripheral markets most affected | First cross-country causal forest on weather shocks, validated out of sample |
 
-Brown and Kshirsagar (2015) estimated weather effects market by market and found them in about a fifth of markets. Our pooled estimate is consistent with that share once heterogeneity is allowed for, since the top tercile carries most of the effect. Okou et al. (2022) show that imported staples follow world prices almost one for one. We find the reverse side of the same market: local staples follow local weather, and imported staples do not. Put together, the two results describe a split market in which households that eat traded staples carry world price risk and households that eat local staples carry local weather risk. Kotz et al. (2024) find that heat raises national food inflation for a year. Our market-level estimates confirm that persistence but trace it to rainfall at short horizons and heat at long ones; national indices average over products and hide the difference between traded and local staples.
+Brown and Kshirsagar (2015) estimated weather effects market by market and found them in about a fifth of markets. Our pooled estimate is consistent with that share once heterogeneity is allowed for, since the top tercile carries most of the effect. Okou et al. (2022) show that imported staples follow world prices almost one for one. We find the reverse side of the same market: local staples follow local weather, and imported staples do not. Kotz et al. (2024) find that heat raises national food inflation for a year. Our market-level estimates confirm that persistence but trace it to rainfall at short horizons and heat at long ones; national indices average over products and hide the difference between traded and local staples.
 
 ## 7.2 Competing explanations
 
@@ -208,7 +208,7 @@ A drought lowers rural incomes and could reduce local demand, which would push p
 
 Weather could also raise prices by damaging roads rather than harvests, the channel Nino (2026) documents for landslides in Colombia. Two results argue against this as the main channel. Wet anomalies, which carry most of the flood and road risk, lower prices (−1.47 percent at six months), and distance to cities amplifies the effect only weakly (+0.19 pp per standard deviation).
 
-Weather might instead set off conflict, which then raises prices, the feedback Raleigh et al. (2015) describe for African markets. Conflict exposure does not change the effect (+0.15 pp, MDE 0.66 pp), and the estimate is unchanged when the ten crisis economies are dropped. Finally, WFP could start monitoring markets after bad seasons, so that the sample over-represents shocks; the entry test rules this out.
+Weather might instead set off conflict, which then raises prices, the feedback Raleigh et al. (2015) describe for African markets. Conflict exposure does not change the effect (+0.15 pp, MDE 0.66 pp), and the estimate is unchanged when the ten crisis economies are dropped.
 
 What remains is a local supply shortfall passed through markets that are integrated for traded staples and segmented for local ones. The production results, with output falling for every major cereal, support that reading.
 
@@ -222,7 +222,7 @@ These findings generalize beyond the countries in the sample wherever two condit
 
 ## 7.4 Limitations
 
-W is measured at the market rather than over the area that supplies it. Where that area lies far away, the estimate of $\delta_h$ is attenuated toward zero.
+W is measured near the market. Averaging over a 200 km supply area raises the estimate (Section 6), but food shipped from farther away is not captured, so $\delta_h$ remains a lower bound.
 
 WFP coverage is selected. The entry test and the pre-2010 subsample suggest that any bias works against our findings, but neither rules out selection on unobserved fragility.
 
