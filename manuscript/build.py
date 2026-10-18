@@ -25,6 +25,11 @@ def table7():
     add("Sample", "Series monitored before 2010", g(sv, "S2a series monitored before 2010"))
     for k, lab in [("S1 window 1 month", "W aggregated over 1 month"), ("S1 window 2 months", "W aggregated over 2 months"), ("S1 window 6 months", "W aggregated over 6 months"), ("S1 clip 3", "z-scores capped at ±3"), ("S1 clip 5", "z-scores capped at ±5"), ("S1 no clipping", "No cap on z-scores"), ("S1 detrended W", "Market-specific detrending of W")]:
         add("Measurement", lab, g(sv, k))
+    sa = pd.read_csv(T + "supply_area.csv")
+    for R in (50, 100, 200):
+        x = sa[(sa.weather == f"{R} km") & (sa.spec == "main") & (sa.h == 6)]
+        if len(x):
+            add("Measurement", f"Heat and soil moisture averaged within {R} km", x.iloc[0])
     add("Measurement", "Prices in US dollars", g(rb, "R2 USD prices"))
     add("Measurement", "Monthly innovation of W instead of level", g(rb, "R5 monthly innovation of W"))
     for _, x in w.iterrows():
