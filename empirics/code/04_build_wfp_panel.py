@@ -94,17 +94,51 @@ def build_prices(df):
     return p
 
 
-def local_weather(markets, dates, window=3, clip=4.0, detrend=False):
+def supply_area_weights(markets, radius_km, land):
+    """Sparse (markets x grid cells) matrix averaging the land cells of the 0.25 deg ERA5 grid whose
+    centres lie within radius_km of each market (cos-latitude area weights). A market with no land
+    cell inside the radius keeps its own cell."""
+    from scipy.sparse import csr_matrix
+    from scipy.spatial import cKDTree
+    lat = np.linspace(90, -90, 721)
+    LA, LO = np.meshgrid(lat, np.arange(1440) * 0.25, indexing="ij")
+    flat = np.flatnonzero(land.ravel())
+    xyz = lambda la, lo: np.column_stack([np.cos(np.deg2rad(la)) * np.cos(np.deg2rad(lo)),
+                                          np.cos(np.deg2rad(la)) * np.sin(np.deg2rad(lo)), np.sin(np.deg2rad(la))])
+    tree = cKDTree(xyz(LA.ravel()[flat], LO.ravel()[flat]))
+    hits = tree.query_ball_point(xyz(markets.latitude.values, markets.longitude.values % 360),
+                                 2 * np.sin(radius_km / (2 * 6371.0)))
+    own = (np.clip(np.round((90 - markets.latitude.values) / 0.25).astype(int), 0, 720) * 1440
+           + np.round((markets.longitude.values % 360) / 0.25).astype(int) % 1440)
+    r, c, v = [], [], []
+    for i, h in enumerate(hits):
+        cells = flat[h] if len(h) else np.array([own[i]])
+        wt = np.cos(np.deg2rad(LA.ravel()[cells]))
+        r += [i] * len(cells); c += list(cells); v += list(wt / wt.sum())
+    return csr_matrix((v, (r, c)), shape=(len(markets), 721 * 1440))
+
+
+def local_weather(markets, dates, window=3, clip=4.0, detrend=False, radius_km=0):
     """Market-level monthly weather anomalies from ERA5 grids + GPCP.
     window: months aggregated (baseline 3); clip: |z| cap (None = no clipping);
-    detrend: remove a market-specific linear trend from W (sensitivity only)."""
+    detrend: remove a market-specific linear trend from W (sensitivity only);
+    radius_km: 0 = the market's own 0.25 deg cell (baseline); > 0 = average of ERA5 land cells within
+    radius_km (supply-area weather). GPCP (2.5 deg) is always taken at the market's cell."""
     lat_idx = np.clip(np.round((90 - markets.latitude.values) / 0.25).astype(int), 0, 720)
     lon_idx = np.round((markets.longitude.values % 360) / 0.25).astype(int) % 1440
+    files = sorted(glob.glob(f"{RAW}/era5_monthly/*.npz"))
+    A = None
+    if radius_km:
+        A = supply_area_weights(markets, radius_km, np.load(files[0])["swvl1"].astype(np.float32) > 0.02)
     rows = {}
-    for f in sorted(glob.glob(f"{RAW}/era5_monthly/*.npz")):
+    for f in files:
         d = np.load(f)
         t = pd.Timestamp(os.path.basename(f)[:7] + "-01")
-        rows[t] = {k: d[k][lat_idx, lon_idx].astype(np.float32) for k in ("tmean", "hdd30", "swvl1")}
+        if A is None:
+            rows[t] = {k: d[k][lat_idx, lon_idx].astype(np.float32) for k in ("tmean", "hdd30", "swvl1")}
+        else:
+            rows[t] = {k: (A @ np.nan_to_num(d[k].astype(np.float32).ravel())).astype(np.float32)
+                       for k in ("tmean", "hdd30", "swvl1")}
     ts = sorted(rows)
     w = {k: pd.DataFrame(np.stack([rows[t][k] for t in ts]), index=ts, columns=markets.mkey.values) for k in ("tmean", "hdd30", "swvl1")}
     # GPCP

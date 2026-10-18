@@ -24,8 +24,8 @@ GROUPS = ["wheat", "maize", "rice", "coarse", "nontraded"]
 CTRL = [f"dlp_l{l}" for l in (1, 2, 3)] + [f"W_l{l}" for l in (1, 2, 3)] + ["dG"] + [f"dG_l{l}" for l in (1, 2, 3)] + ["dE"]
 
 
-def load(H):
-    p = pd.read_parquet(f"{ROOT}/data/processed/panel.parquet")
+def load(H, path=None):
+    p = pd.read_parquet(path or f"{ROOT}/data/processed/panel.parquet")
     p = p[p.group.isin(GROUPS) & (p.date >= "2000-01-01")].sort_values(["series", "date"]).copy()
     g = p.groupby("series")
     p["dG"] = g.lG.diff()
