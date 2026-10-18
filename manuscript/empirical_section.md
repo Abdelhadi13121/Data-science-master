@@ -21,7 +21,7 @@ Each variable is aggregated over three months, the usual convention for standard
 
 $$
 W_{mt}=\frac{\tilde W_{mt}-\overline{\tilde W}}{\operatorname{sd}(\tilde W)},\qquad
-\tilde W_{mt}=\tfrac13\left(z^{\text{heat}}_{mt}-z^{\text{soil}}_{mt}-z^{\text{rain}}_{mt}\right). \qquad\qquad (1)
+\tilde W_{mt}=\tfrac13\left(z^{\text{heat}}_{mt}-z^{\text{soil}}_{mt}-z^{\text{rain}}_{mt}\right). \qquad\qquad (3)
 $$
 
 Positive values mean hotter and drier than normal for that market and season. In the estimation sample W has mean 0.30 and standard deviation 1.10 (Table 1). The positive mean reflects warming since the 1991 to 2020 base period; detrending makes no difference (Section 6). A quarter of market-months lie above W = 1, 6.1 percent above W = 2, and 11.1 percent below W = −1.
@@ -45,10 +45,10 @@ World prices for wheat, maize and rice are IMF benchmark series taken from FRED 
 We estimate the cumulative response of local prices to an adverse local weather shock with panel local projections (Jordà, 2005). For series *i* in market *m* and country *k*, and for horizons $h\in\{0,2,4,\ldots,12\}$ months,
 
 $$
-\ln p_{i,t+h}-\ln p_{i,t-1}=\delta_h W_{m t}+\sum_{l=1}^{3}\left(\rho_{hl}\,\Delta\ln p_{i,t-l}+\phi_{hl}W_{m,t-l}+\kappa_{hl}\,\Delta G_{c,t-l}\right)+\kappa_{h0}\,\Delta G_{ct}+\theta_h\,\Delta E_{kt}+\alpha^{h}_{i,s(t)}+\lambda^{h}_{k,y(t)}+\varepsilon_{i,t+h}. \qquad\qquad (2)
+\ln p_{i,t+h}-\ln p_{i,t-1}=\delta_h W_{m t}+\sum_{l=1}^{3}\left(\rho_{hl}\,\Delta\ln p_{i,t-l}+\phi_{hl}W_{m,t-l}+\kappa_{hl}\,\Delta G_{c,t-l}\right)+\kappa_{h0}\,\Delta G_{ct}+\theta_h\,\Delta E_{kt}+\alpha^{h}_{i,s(t)}+\lambda^{h}_{k,y(t)}+\varepsilon_{i,t+h}. \qquad\qquad (4)
 $$
 
-Here $W_{mt}$ is the index in Eq. (1), $\Delta G_{ct}$ the monthly log change in the matched world price, and $\Delta E_{kt}$ the monthly log change in the exchange rate. The fixed effects $\alpha_{i,s(t)}$ are defined for each series and calendar month, and $\lambda_{k,y(t)}$ for each country and year.
+Here $W_{mt}$ is the index in Eq. (3), $\Delta G_{ct}$ the monthly log change in the matched world price, and $\Delta E_{kt}$ the monthly log change in the exchange rate. The fixed effects $\alpha_{i,s(t)}$ are defined for each series and calendar month, and $\lambda_{k,y(t)}$ for each country and year.
 
 *Estimand.* $\delta_h$ is the percent change in the local retail price h months after a one-standard-deviation adverse weather anomaly, measured against the month before the shock.
 
@@ -78,14 +78,14 @@ H5. Adverse weather lowers production of traded and local staples alike. If it l
 
 ## 4.4 Heterogeneity and mechanism
 
-For H3, we residualize the six-month outcome and W on the fixed effects and controls of Eq. (2) and fit a causal forest with W as a continuous treatment (Athey et al., 2019). The forest uses honest splitting, 400 trees and leaves of at least 200 observations. Its inputs are distance to the coast, climatological aridity (log mean annual rainfall), climatological heat exposure, absolute latitude, product group and a label for imported products.
+For H3, we residualize the six-month outcome and W on the fixed effects and controls of Eq. (4) and fit a causal forest with W as a continuous treatment (Athey et al., 2019). The forest uses honest splitting, 400 trees and leaves of at least 200 observations. Its inputs are distance to the coast, climatological aridity (log mean annual rainfall), climatological heat exposure, absolute latitude, product group and a label for imported products.
 
-A flexible learner can mistake noise for heterogeneity, so we cross-fit by country. The forest is trained on a random half of countries and predicts effects for the other half, then the halves swap. We sort market-months into terciles of predicted effect and re-estimate Eq. (2) inside each tercile, using only countries the forest did not see. If the forest has found heterogeneity that exists, realized effects should rise across terciles. A linear projection of the effect on standardized moderators, with two-way clustered errors, complements the forest.
+A flexible learner can mistake noise for heterogeneity, so we cross-fit by country. The forest is trained on a random half of countries and predicts effects for the other half, then the halves swap. We sort market-months into terciles of predicted effect and re-estimate Eq. (4) inside each tercile, using only countries the forest did not see. If the forest has found heterogeneity that exists, realized effects should rise across terciles. A linear projection of the effect on standardized moderators, with two-way clustered errors, complements the forest.
 
 For H5 we estimate
 
 $$
-\ln Q_{ckt}=\beta\,\overline{W}_{ct}+\mu_{ck}+\tau_{kt}+u_{ckt}, \qquad\qquad (3)
+\ln Q_{ckt}=\beta\,\overline{W}_{ct}+\mu_{ck}+\tau_{kt}+u_{ckt}, \qquad\qquad (5)
 $$
 
 where $Q_{ckt}$ is production of crop *k* in country *c* and year *t*, and $\overline{W}_{ct}$ is the annual mean of W across the country's monitored markets. Standard errors are clustered by country.
@@ -110,7 +110,7 @@ The magnitudes matter in practice. A drought of two standard deviations, which o
 
 {{TABLE2}}
 
-*Notes:* Local projections, Eq. (2). Dependent variable: $100\times(\ln p_{t+h}-\ln p_{t-1})$. Series × calendar-month and country × year fixed effects. Controls: three lags of Δln p, W and ΔG; contemporaneous ΔG; ΔE. Standard errors, two-way clustered by country (85) and month (312), in parentheses. Panel B enters the three weather components jointly; Panel C replaces W with bins. \*\*\* p < 0.01, \*\* p < 0.05, \* p < 0.1.
+*Notes:* Local projections, Eq. (4). Dependent variable: $100\times(\ln p_{t+h}-\ln p_{t-1})$. Series × calendar-month and country × year fixed effects. Controls: three lags of Δln p, W and ΔG; contemporaneous ΔG; ΔE. Standard errors, two-way clustered by country (85) and month (312), in parentheses. Panel B enters the three weather components jointly; Panel C replaces W with bins. \*\*\* p < 0.01, \*\* p < 0.05, \* p < 0.1.
 
 Rainfall drives the early response (Table 2, Panel B; Figure 3). A one-standard-deviation rainfall deficit raises prices by 0.49 percent at two months and 0.79 percent at four and six months (SE 0.25), the stretch between a failed growing season and the lean season. Heat works later. Its effect is small and imprecise up to eight months, then reaches 0.56 percent at ten months and 0.80 percent at twelve (SE 0.32). Once rainfall is controlled for, soil dryness adds little. The timing fits the crop cycle: a rainfall shortfall shows in the fields and in traders' expectations during the season, the channel Letta et al. (2022) document in India, while heat damage becomes visible only when a short harvest comes in.
 
@@ -118,7 +118,7 @@ The response is close to linear and roughly symmetric (Panel C, reference −1 <
 
 ## 5.2 Who pays: tradability (H2)
 
-The response falls almost entirely on staples that rarely cross borders (Table 3; Figure 2). Rice, the reference product, shows a small and insignificant effect at every horizon (0.40 percent at six months, SE 0.27), and wheat cannot be told apart from rice (interaction −0.00 at six months, SE 0.33). Maize behaves very differently. It rises 1.41 pp more than rice at two months (SE 0.30) and 1.67 pp more at four (SE 0.42). Sorghum and millet add 1.40 pp at four months (SE 0.66), and roots and tubers 1.46 pp at six (SE 0.56). Products labelled as imported respond less than other products in the same market (−0.61 pp at four months, SE 0.38), but the difference is not significant, and with a minimum detectable effect of 1.1 pp a moderate gap cannot be ruled out.
+The response falls almost entirely on staples that rarely cross borders (Table 3; Figure 2). Rice, the reference product, shows a small and insignificant effect at every horizon (0.40 percent at six months, SE 0.27), and wheat cannot be told apart from rice (interaction −0.00 at six months, SE 0.33). Maize behaves very differently. It rises 1.40 pp more than rice at two months (SE 0.29) and 1.67 pp more at four (SE 0.42). Sorghum and millet add 1.40 pp at four months (SE 0.66), and roots and tubers 1.46 pp at six (SE 0.56). Products labelled as imported respond less than other products in the same market (−0.61 pp at four months, SE 0.38), but the difference is not significant, and with a minimum detectable effect of 1.1 pp a moderate gap cannot be ruled out.
 
 **Table 3. Heterogeneity by product and world-market state (percent per 1 s.d.)**
 
@@ -126,7 +126,7 @@ The response falls almost entirely on staples that rarely cross borders (Table 3
 
 *Notes:* As Table 2. Interaction rows report differences from the reference group. "World price above 24-m mean" equals one when the matched world price exceeds its 24-month moving average.
 
-The obvious reading of Table 3 is that import parity caps the price of traded staples, so a local shortfall is met by imports rather than by a higher price. A competing explanation is that rice and wheat in these markets are largely imported and local weather never touches their supply. Table 5 rules this out. An adverse year lowers national production by 7.4 percent per standard deviation across the eight crops (SE 2.3; 7,233 country-crop-years, 86 countries). Rice output falls by 6.3 percent (SE 2.8), and the gap between rice and wheat on one side and local staples on the other is small and insignificant (+3.2 pp, SE 3.4). Maize (−11.3 percent) and sorghum (−16.9 percent) fall most.
+The obvious reading of Table 3 is that import parity caps the price of traded staples, so a local shortfall is met by imports rather than by a higher price. A competing explanation is that rice and wheat in these markets are largely imported and local weather never touches their supply. Table 5 rules this out. An adverse year lowers national production by 7.4 percent per standard deviation across the eight crops (SE 2.3; 7,233 country-crop-years, 86 countries). Rice output falls by 6.3 percent (SE 2.8) and wheat output by an imprecise 3.6 percent (SE 5.1), and the gap between rice and wheat on one side and local staples on the other is small and insignificant (+3.2 pp, SE 3.4). Maize (−11.3 percent) and sorghum (−16.9 percent) fall most.
 
 Local weather therefore cuts the supply of traded and non-traded staples alike, yet only the prices of non-traded staples move, which is what spatial arbitrage predicts. Roots and tubers are the exception on the production side: their output does not respond (between −0.6 and −2.7 percent, none significant), while their prices do. Households switching from scarce cereals to roots would produce this pattern, but FAOSTAT imputes root-crop output for many countries, so we do not lean on it.
 
@@ -134,7 +134,7 @@ Local weather therefore cuts the supply of traded and non-traded staples alike, 
 
 {{TABLE5}}
 
-*Notes:* Eq. (3). Dependent variable: ln production. Country × crop and crop × year fixed effects; standard errors clustered by country.
+*Notes:* Eq. (5). Dependent variable: ln production. Country × crop and crop × year fixed effects; standard errors clustered by country.
 
 ## 5.3 Which markets respond most (H3)
 
@@ -174,11 +174,11 @@ Table 7 reports the six-month effect under alternative choices, grouped by the t
 
 *Notes:* Each row changes one element of the baseline in the first row. Supply-area weather averages ERA5 heat and soil moisture over land within the stated radius. Standard errors two-way clustered by country and month unless stated.
 
-Two falsification tests support the causal reading. Weather six months in the future, added to Eq. (2), has no effect on current price changes (−0.05 pp at h = 0, SE 0.07; −0.12 pp at h = 2, SE 0.19). Weather at month *t* does not predict price changes from t−4 to t−1 (−0.15 pp, SE 0.16). Under the decision rule in the pre-analysis plan, the causal interpretation stands.
+Two falsification tests support the causal reading. Weather six months in the future, added to Eq. (4), has no effect on current price changes (−0.05 pp at h = 0, SE 0.07; −0.12 pp at h = 2, SE 0.19). Weather at month *t* does not predict price changes from t−4 to t−1 (−0.15 pp, SE 0.16). Under the decision rule in the pre-analysis plan, the causal interpretation stands.
 
 WFP decides which markets to monitor, often in response to crises, so we tested for selection in two ways. First, the month a market enters the panel is unrelated to mean W in the three preceding months (−0.05 pp against a mean monthly entry rate of 0.46 percent, SE 0.03; country × year and market fixed effects). Second, among series already monitored before 2010 the effect is larger, at 1.66 percent (SE 0.43), so the expansion of coverage after 2020 dilutes the estimate rather than producing it. Dropping ten crisis and hyperinflation economies gives 1.03 percent, and ending the sample in 2019 gives 1.08 percent.
 
-How W is built matters in one predictable way. The estimate rises with the aggregation window, from 0.56 percent for one month to 0.81, 0.99 and 1.40 percent for two, three and six months. Prices respond to accumulated seasonal anomalies, not to monthly weather, which makes our three-month baseline conservative. For the same reason the monthly innovation of the three-month index has no detectable effect (0.13 percent, SE 0.12). Averaging heat and soil moisture over land within 50, 100 and 200 km of the market raises the estimate to 1.02, 1.08 and 1.18 percent. Entered jointly with the point measure, the 200 km measure keeps the effect (1.24 percent, SE 0.45) and the point measure falls to −0.06 (SE 0.22), so point weather attenuates the baseline. Capping z-scores at ±3 or ±5, removing the cap, or detrending W by market leaves the estimate between 0.94 and 1.02 percent. In US dollars the effect is 0.76 percent (SE 0.29); it is slightly smaller because dollar prices also carry exchange-rate noise. Winsorizing the outcome at the 1st and 99th percentiles gives {{WINS6}}.
+How W is built matters in one predictable way. The estimate rises with the aggregation window, from 0.56 percent for one month to 0.81, 0.99 and 1.40 percent for two, three and six months. Prices respond to accumulated seasonal anomalies, not to monthly weather, which makes our three-month baseline conservative. For the same reason the monthly innovation of the three-month index has no detectable effect (0.13 percent, SE 0.12). Averaging heat and soil moisture over land within 50, 100 and 200 km of the market raises the estimate to 1.02, 1.08 and 1.18 percent. Entered jointly with the point measure, the 200 km measure keeps the effect (1.24 percent, SE 0.45) and the point measure falls to −0.06 (SE 0.22). The two measures correlate at 0.93, so this contrast is imprecise, but it points to attenuation in the baseline. Capping z-scores at ±3 or ±5, removing the cap, or detrending W by market leaves the estimate between 0.94 and 1.02 percent. In US dollars the effect is 0.76 percent (SE 0.29); it is slightly smaller because dollar prices also carry exchange-rate noise. Winsorizing the outcome at the 1st and 99th percentiles gives {{WINS6}}.
 
 Clustering on 2° or 5° grid cells crossed with month raises the t-statistic to 4.48 and 3.76, and clustering by country alone gives 3.95. The baseline two-way clustering by country and month is the most conservative of these.
 
@@ -210,7 +210,7 @@ Weather could also raise prices by damaging roads rather than harvests, the chan
 
 Weather might instead set off conflict, which then raises prices, the feedback Raleigh et al. (2015) describe for African markets. Conflict exposure does not change the effect (+0.15 pp, MDE 0.66 pp), and the estimate is unchanged when the ten crisis economies are dropped.
 
-What remains is a local supply shortfall passed through markets that are integrated for traded staples and segmented for local ones. The production results, with output falling for every major cereal, support that reading.
+What remains is a local supply shortfall that imports offset only for traded staples.
 
 ## 7.3 Policy implications
 
@@ -222,7 +222,7 @@ These findings generalize beyond the countries in the sample wherever two condit
 
 ## 7.4 Limitations
 
-W is measured near the market. Averaging over a 200 km supply area raises the estimate (Section 6), but food shipped from farther away is not captured, so $\delta_h$ remains a lower bound.
+W is measured near the market. Averaging over a 200 km supply area raises the estimate (Section 6), but food shipped from farther away is not captured, so $\delta_h$ likely understates the effect.
 
 WFP coverage is selected. The entry test and the pre-2010 subsample suggest that any bias works against our findings, but neither rules out selection on unobserved fragility.
 

@@ -4,7 +4,7 @@ title: "Who pays for local droughts? Weather shocks and staple food prices in 3,
 
 # Abstract {.unnumbered}
 
-Climate shocks are expected to raise food prices, but the evidence comes mostly from national price indices or single countries, and it says little about which foods and which markets absorb the shock. We combine 26 years of monthly retail prices from 3,221 markets in 85 low- and middle-income countries with reanalysis weather measured at each market. Panel local projections with series × calendar-month and country × year fixed effects show that a one-standard-deviation adverse weather anomaly (hotter and drier than normal) raises local staple prices by 0.99 percent after six months (95% CI 0.46 to 1.53). The effect persists for at least a year and survives correction for testing at seven horizons. The burden falls on staples that rarely cross borders. Maize, sorghum and millet, and roots and tubers respond by 1.2 to 1.7 percentage points more than rice. Rice and wheat prices do not respond, even though local weather lowers their national production by as much as it lowers other crops. A causal forest, validated on countries it was not trained on, finds that one third of market-months face a response four times the average, concentrated in arid areas. World price conditions do not amplify the local effect. Placebo tests, selection tests and twenty-one alternative specifications support these results. Monitoring and assistance aimed at weather-driven food price spikes should target locally traded staples in dry markets, where trade cannot absorb a bad harvest.
+Climate shocks are expected to raise food prices, but the evidence comes mostly from national price indices or single countries, and it says little about which foods and which markets absorb the shock. We combine 26 years of monthly retail prices from 3,221 markets in 85 low- and middle-income countries with reanalysis weather measured at each market. Panel local projections with series × calendar-month and country × year fixed effects show that a one-standard-deviation adverse weather anomaly (hotter and drier than normal) raises local staple prices by 0.99 percent after six months (95% CI 0.46 to 1.53). The effect persists for at least a year and survives correction for testing at seven horizons. The burden falls on staples that rarely cross borders. Maize, sorghum and millet, and roots and tubers respond by 1.2 to 1.7 percentage points more than rice. Rice and wheat prices do not respond, even though local weather lowers national rice production about as much as that of other crops. A causal forest, validated on countries it was not trained on, finds that one third of market-months face a response four times the average, concentrated in arid areas. World price conditions do not amplify the local effect. Placebo tests, selection tests and twenty-one alternative specifications support these results. Monitoring and assistance aimed at weather-driven food price spikes should target locally traded staples in dry markets, where trade cannot absorb a bad harvest.
 
 **Keywords:** food prices; weather shocks; drought; market integration; tradability; local projections; causal forest
 
@@ -16,7 +16,7 @@ This paper asks who pays for local droughts. We assemble monthly retail prices f
 
 We find four things. First, a one-standard-deviation adverse anomaly raises local staple prices by about 1 percent after six months, with no reversal within a year. A two-standard-deviation drought, which occurs in about six percent of market-months, raises prices by about 2 percent from local weather alone, on top of any national harvest effect. Rainfall drives the response in the first six months and heat matters at longer horizons. Good seasons lower prices by about as much as bad seasons raise them.
 
-Second, the burden falls on staples that do not cross borders. Maize, sorghum and millet, and cassava, yams and plantains respond by 1.2 to 1.7 percentage points more than rice. Rice and wheat prices do not respond at all. This is not because local weather spares rice and wheat: in FAOSTAT data, an adverse year lowers national rice production by 6.3 percent, about as much as the average across crops. Local supply falls for all staples, but only the prices of staples that cannot be replaced by imports adjust. This is the spatial arbitrage logic behind the law of one price (Fackler and Goodwin, 2001), and our results show it operating across a large share of the developing world.
+Second, the burden falls on staples that do not cross borders. Maize, sorghum and millet, and cassava, yams and plantains respond by 1.2 to 1.7 percentage points more than rice. Rice and wheat prices do not respond at all. This is not because local weather spares rice and wheat: in FAOSTAT data, an adverse year lowers national rice production by 6.3 percent, about as much as the average across crops. Local supply falls for rice as for the other staples, but only the prices of staples that cannot be replaced by imports adjust. This is the spatial arbitrage logic behind the law of one price (Fackler and Goodwin, 2001), and our results show it operating across a large share of the developing world.
 
 Third, the response varies across markets far more than the average suggests. We train a causal forest (Athey et al., 2019) on half of the countries and evaluate it on the other half. Markets in the top third of predicted effects show a realized response of 2.2 percent at six months, against about 0.5 percent elsewhere. Aridity is the clearest predictor: dry places have thin local supply and fewer neighbors with surplus to draw on.
 
@@ -41,16 +41,16 @@ Most staple food in low-income countries is grown by smallholders under rainfed 
 Consider a market *m* and a staple *k*. Local supply is $Q_{mk}(W_m)=\bar Q_{mk}(1-\omega_{k}W_m)$, where $W_m$ is the adverse weather anomaly and $\omega_k>0$ is the sensitivity of output to weather. Local demand has price elasticity $-\varepsilon_{mk}<0$. Without trade, the market clears at the autarky price $p^{A}_{mk}(W_m)$, which rises with $W_m$:
 
 $$
-\frac{\partial \ln p^{A}_{mk}}{\partial W_m}\approx\frac{\omega_k}{\varepsilon_{mk}}. \qquad\qquad (4)
+\frac{\partial \ln p^{A}_{mk}}{\partial W_m}\approx\frac{\omega_k}{\varepsilon_{mk}}. \qquad\qquad (1)
 $$
 
 Traders bring food in whenever the local price exceeds the import parity price $p^{M}_{mk}=G_k\,E\,(1+\tau_{m})$, where $G_k$ is the world price, *E* the exchange rate and $\tau_m$ the proportional cost of moving food to market *m*. The local price is therefore
 
 $$
-p_{mk}=\min\{\,p^{A}_{mk}(W_m),\;p^{M}_{mk}\,\}. \qquad\qquad (5)
+p_{mk}=\min\{\,p^{A}_{mk}(W_m),\;p^{M}_{mk}\,\}. \qquad\qquad (2)
 $$
 
-When import parity binds, a local supply shock is absorbed by imports and $\partial \ln p_{mk}/\partial W_m=0$. When it does not bind, the response equals Eq. (4). Storage (Deaton and Laroque, 1992) smooths the response over the months after the harvest but does not change its sign.
+When import parity binds, a local supply shock is absorbed by imports and $\partial \ln p_{mk}/\partial W_m=0$. When it does not bind, the response equals Eq. (1). Storage (Deaton and Laroque, 1992) smooths the response over the months after the harvest but does not change its sign.
 
 ## 2.3 Predictions
 

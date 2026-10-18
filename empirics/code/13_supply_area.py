@@ -7,7 +7,7 @@ R km of the market (R = 50, 100, 200), and W is rebuilt exactly as in the baseli
 1991-2020 market x calendar-month climatology, sd floor, clip +/-4). GPCP rainfall (2.5 deg, about
 275 km) is already an area measure and is unchanged.
 
-Re-estimated with the main specification (Eq. 2), two-way clustered by country and month:
+Re-estimated with the main specification (Eq. 4 of the paper), two-way clustered by country and month:
   main          delta_h, h = 0, 2, ..., 12
   tradability   W and W x group (reference rice), h = 2, 4, 6
   horse race    W_point and W_R jointly, h = 6

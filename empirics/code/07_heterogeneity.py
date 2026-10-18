@@ -10,7 +10,7 @@ and partialled on the main-specification controls (FWL). Then:
   3. Linear heterogeneity (BLP-type): y ~ W + W x standardized moderators, two-way clustered.
 Moderators: distance to coast (km), aridity (log mean annual precipitation, GPCP 1991-2020),
 climatological heat exposure (mean annual HDD30, ERA5 1991-2020), |latitude|, product group, imported label.
-Outputs: output/tables/het_terciles.csv, het_blp.csv, het_forest_importance.csv
+Outputs: output/tables/het_terciles.csv, het_quintiles.csv (PAP grouping), het_blp.csv, het_forest_importance.csv
 """
 import glob
 import importlib.util
@@ -137,6 +137,17 @@ if __name__ == "__main__":
     ter["t"] = ter.delta / ter.se
     ter.to_csv(f"{OUT}/het_terciles.csv", index=False)
     print(ter.round(4).to_string(), flush=True)
+
+    # quintiles: the grouping named in PAP_local_weather.md (terciles are reported in the paper for power)
+    d["quintile"] = pd.qcut(d.cate.rank(method="first"), 5, labels=[f"Q{i}" for i in range(1, 6)])
+    qrows = []
+    for q, g in d.groupby("quintile", observed=True):
+        m = clustered_ols(g, ["W_t"])
+        qrows.append(dict(quintile=q, delta=m.params["W_t"], se=m.std_errors["W_t"], mean_cate=g.cate.mean(), n=len(g)))
+    qu = pd.DataFrame(qrows)
+    qu["t"] = qu.delta / qu.se
+    qu.to_csv(f"{OUT}/het_quintiles.csv", index=False)
+    print(qu.round(4).to_string(), flush=True)
 
     # linear heterogeneity with standardized continuous moderators
     X = ["W_t"]

@@ -11,6 +11,7 @@ S3  Spatial inference at h = 6: two-way clusters (grid cell x month) for 2 deg a
 S4  Multiple testing across the 7 horizons of the main effect: Holm and Bonferroni.
 Output: output/tables/sensitivity.csv, selection_entry.csv, multiple_testing.csv
 """
+import glob
 import importlib.util
 import os
 
@@ -114,7 +115,16 @@ if __name__ == "__main__":
     first = p.dropna(subset=["lp"]).groupby("series").date.min()
     old = first[first < "2010-01-01"].index
     add("S2a series monitored before 2010", *est(p[p.series.isin(old)], ["W"], lw.CTRL, twoway))
-    # S1 index variants
+    # S1 index variants and the entry test rebuild W from the ERA5 grids (1.4 GB, not shipped in the
+    # replication package). Without the grids, keep the shipped S1 rows and selection_entry.csv.
+    if not glob.glob(f"{lw.ROOT}/data/raw/era5_monthly/*.npz"):
+        shipped = pd.read_csv(f"{OUT}/sensitivity.csv.shipped") if os.path.exists(f"{OUT}/sensitivity.csv.shipped") else None
+        if shipped is not None:
+            rows += shipped[shipped.check.str.startswith("S1")].to_dict("records")
+            pd.DataFrame(rows).to_csv(f"{OUT}/sensitivity.csv", index=False)
+        print("ERA5 grids not found: S1 rows and the entry test are taken from the shipped results "
+              "(run code/01_era5_monthly.py to recompute).", flush=True)
+        raise SystemExit(0)
     mk = p.groupby("mkey", as_index=False)[["latitude", "longitude"]].first()
     dates = p.date.unique()
     for name, kw in [("S1 window 1 month", dict(window=1)), ("S1 window 2 months", dict(window=2)),
