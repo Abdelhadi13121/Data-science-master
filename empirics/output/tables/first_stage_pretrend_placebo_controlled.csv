@@ -1,0 +1,4 @@
+window,controls,beta,t
+t-2..t-1,Z lags 1..2,0.41,0.72
+t-4..t-1,Z lags 1..4,1.48,1.39
+t-7..t-1,Z lags 1..7,1.61,0.96

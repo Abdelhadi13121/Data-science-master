@@ -1,0 +1,16 @@
+Authors,Year,Outlet,Sample,Shock / design,Main finding,How this paper differs
+Brown & Kshirsagar,2015,Global Environmental Change,"554 markets, 51 countries, 2008–12",Local weather (NDVI) and international prices; market-by-market regressions,~20% of markets weather-sensitive; 9% to international prices,"Pooled causal LPs over 26 yrs, 25k series; tradability gradient; placebos; selection tests"
+Chen & Villoria,2019,Environmental Research Letters,"76 maize markets, 27 net importers, 2000–15","Import share, stocks, climate-induced production shocks",Imports and stocks reduce intra-annual price CV,Price level response to local weather; all staples; mechanism via production; ML heterogeneity
+"Baffes, Kshirsagar & Mitchell",2019,World Bank Economic Review,18 Tanzanian maize markets,"Regional/international prices, harvest, weather",Domestic factors explain 2/3 of explained variation; remoteness matters,Global scope; causal identification of the weather effect
+"Cedrez, Chamberlin & Hijmans",2020,Global Food Security,168 SSA markets,Dry preceding season; seasonality; spatial prediction,Prices rise slightly after dry seasons,"Causal dynamic effects, tradability, heterogeneity"
+"Raleigh, Choi & Kniveton",2015,Global Environmental Change,113 African markets 1997–2010,"Rainfall, prices, conflict (simultaneous equations)",Dry conditions → higher prices → conflict,We test conflict as moderator (null) on 73 countries
+"Letta, Montalbano & Pierre",2022,AJAE,Indian district markets 2004–17,Drought news and traders' expectations,Prices rise pre-harvest on weather news,Multi-country; accumulated seasonal anomalies; tradability
+Kakpo et al.,2022,Food Policy,Niger districts,Rainfall shocks and millet seasonality,Drought amplifies price seasonality,Global scale; all staples
+"Okou, Spray & Unsal",2022,IMF WP 22/135,"15 SSA countries, 5 staples",Global prices; disaster & war dummies,Pass-through ≈1 for imported staples; disasters +1.8%,Mirror image: local staples respond to local weather; gridded continuous shocks
+Emediegwu,2024,Environmental and Resource Economics,"1,100 markets, 36 SSA countries","ENSO (global climate anomaly), STAR models",ENSO affects ~half of prices nonlinearly,Local (market) weather rather than global ENSO; causal LPs
+Villoria,2026,AJAE,Southern/Eastern Africa maize,El Niño; trade frictions (gravity-derived prices),Trade reduces El Niño price spikes,Market-level evidence that tradability insulates; production mechanism
+Kotz et al.,2024,Communications Earth & Environment,"National CPI, 121 countries",Temperature,Heat raises food inflation for 12 months,Market-level; who pays; rainfall vs heat channels
+"Salazar, Acuña-Duarte & Gil",2023,Agricultural Economics,Chile potato/tomato markets,Drought index; dyadic regressions,Drought reduces price differentials,Multi-country staples
+Song et al.,2026,Agricultural Economics,52 N. Nigeria markets,"Co-occurrence of climate extremes, volatility, conflict",Hotspots up to 5x,Causal effects; global
+Nino,2026,Food Policy,"Colombia, 230k weekly prices",Landslide road closures (IV); causal forest,Closures raise prices 0.5–0.9%; peripheral markets most,Global; weather shocks; out-of-sample forest calibration
+Bohorquez-Penuela et al.,2026,Working paper,"Colombia, 40 crops",Weather shocks; ML heterogeneity,Global (national) shocks dominate,Multi-country; tradability
